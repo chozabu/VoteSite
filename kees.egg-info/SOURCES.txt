@@ -3,7 +3,10 @@ MANIFEST.in
 README.txt
 development.ini
 production.ini
+setup.py
 kees/__init__.py
+kees/dblayer.py
+kees/testdb.py
 kees/tests.py
 kees/views.py
 kees.egg-info/PKG-INFO
