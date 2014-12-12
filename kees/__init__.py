@@ -15,5 +15,7 @@ def main(global_config, **settings):
     config.add_route('query_levels', '/query_levels')
     config.add_route('login', '/login')
     config.add_route('new_user', '/new_user')
+    config.add_route('uploadCrash', '/uploadCrash')
+    config.add_route('crashLogs', '/crashLogs')
     config.scan()
     return config.make_wsgi_app()

@@ -4,11 +4,13 @@ import os
 import uuid
 import string
 import dblayer
+import datetime
 from pyramid.response import Response
 
 
 if not os.path.exists("kees/pplevels"):os.makedirs("kees/pplevels")
 if not os.path.exists("kees/thumbs"):os.makedirs("kees/thumbs")
+if not os.path.exists("kees/crashs"):os.makedirs("kees/crashs")
 
 def pythonicVarName(field):
 	firstLetter = True
@@ -35,6 +37,21 @@ def write_a_file(file_path, input_file):
 		if not data:
 			break
 		output_file.write(data)
+
+	# If your data is really critical you may want to force it to disk first
+	# using output_file.flush(); os.fsync(output_file.fileno())
+
+	output_file.close()
+
+	# Now that we know the file has been fully saved to disk move it into place.
+
+	os.rename(temp_file_path, file_path)
+def write_some_data(file_path, input_data):
+	temp_file_path = file_path + '~'
+	output_file = open(temp_file_path, 'wb')
+
+	# Finally write the data to a temporary file
+	output_file.write(input_data)
 
 	# If your data is really critical you may want to force it to disk first
 	# using output_file.flush(); os.fsync(output_file.fileno())
@@ -105,6 +122,28 @@ def uploadLevel(request):
 		return {"result":"OK"}
 	return {"result":"FAIL","dta":[session,author,name], "insessions":session in dblayer.sessions}
 	#return Response("OK")
+
+
+
+@view_config(route_name='uploadCrash', renderer='json')
+def uploadCrash(request):
+	i = request.POST
+	print "POST uploading crash"
+
+	now = str(datetime.datetime.now())
+	crashData = i['crashData']
+
+	namepath = "kees/crashs/" + now+"--" + str(i['version'])
+	write_some_data(namepath, crashData)
+
+	return {"result":"OK"}
+
+@view_config(route_name='crashLogs', renderer='json')
+def crashLogs(request):
+		files = os.listdir('kees/crashs')
+		#result = "".join('<a href="crashs/'+f+'" </>'+f+'</a><br/>' for f in files)
+		result = "".join('<a href="kees/crashs/'+f+'" </>'+f+'</a><br/>' for f in files)
+		return Response(body=result,headerlist=[('Content-Type', 'text/html')])
 
 
 @view_config(route_name='store_mp3_view', renderer='json')
