@@ -26,7 +26,7 @@
   <body>
 
     <div class="starter-template">
-      <div class="container">
+      <!--<div class="container">
         <div class="row">
           <div class="col-md-2">
             <img class="logo img-responsive" src="${request.static_url('kees:static/pyramid.png')}" alt="pyramid web framework">
@@ -47,8 +47,8 @@
               <li><i class="glyphicon glyphicon-globe icon-muted"></i><a href="irc://irc.freenode.net#pyramid">IRC Channel</a></li>
               <li><i class="glyphicon glyphicon-home icon-muted"></i><a href="http://pylonsproject.org">Pylons Project</a></li>
           </div>
-        </div>
-        <form action="/store_mp3_view" method="post" accept-charset="utf-8"
+        </div>-->
+     <form action="/store_mp3_view" method="post" accept-charset="utf-8"
       enctype="multipart/form-data">
 
     <label for="mp3">Mp3</label>
@@ -57,12 +57,16 @@
 
     <input type="submit" value="submit" />
 </form>
+        <a href="${request.static_url('kees:static/listlevels.html')}">
+            <img class="logo img-responsive" src="${request.static_url('kees:static/pyramid.png')}" alt="pyramid web framework">
+        </a>
+        <!--
         <div class="row">
           <div class="copyright">
             Copyright &copy; Pylons Project
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
 
 
