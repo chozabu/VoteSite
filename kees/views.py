@@ -87,6 +87,7 @@ def query_levels(request):
 def uploadLevel(request):
 	i = request.POST
 	session =  i['session'].file.read()
+	print session
 	author =  i['author'].file.read()
 	name =  i['name'].file.read()
 	leveldata = i['leveldata'].file

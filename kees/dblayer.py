@@ -114,6 +114,7 @@ def new_user(username, password):
 	print eUser
 	if(eUser):
 		print "dupe account creation attempt on name: " + username
+		return login(username, password)
 		return {"result":"fail", "message":"name taken"}
 	newUser = {}
 	newUser['createdAt'] = time.time()

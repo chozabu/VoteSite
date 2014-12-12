@@ -8,6 +8,7 @@ def main(global_config, **settings):
     config.include('pyramid_chameleon')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('pplevels', 'pplevels', cache_max_age=3600)
+    config.add_static_view('thumbs', 'thumbs', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('store_mp3_view', '/store_mp3_view')
     config.add_route('uploadLevel', '/uploadLevel')
