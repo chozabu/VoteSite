@@ -16,7 +16,10 @@ john = table.find_one(name='John Doe')
 print john
 '''
 
-def add_level(name, author, fullname):
+def add_level(session, name, author, fullname):
+	ses = getsession(session)
+	if not ses:
+		return False
 	isNew = True
 	levelstable = db['pplevels']
 	record = levelstable.find_one(filename=fullname)
@@ -45,10 +48,19 @@ def add_level(name, author, fullname):
 		levelstable.insert(newLevel)
 	else:
 		levelstable.update(newLevel,['filename'])
+	return True
 def query_levels(sortKey, cursor=0, limit=8, **_filter):
 	levelstable = db['pplevels']
+	print limit, cursor, sortKey
 	a= levelstable.find(_limit=limit, _offset=cursor, order_by=sortKey, **_filter)
-	return a
+	return [x for x in a]
+
+def getsession(session):
+	if sessions.has_key(session) == False:
+		return False
+	sRef = sessions[session]
+	sRef['lastTouch'] = time.time()
+	return True
 
 def newSession(username, userRef):
 	timeNow = time.time()
@@ -64,7 +76,7 @@ def newSession(username, userRef):
 	return session
 
 def checkTimedOutSessions():
-	texpire = time.time()-1000*60*60
+	texpire = time.time()-1000*60*60#*24*7
 	remsessions = []
 	for sid in sessions:
 		sRef = sessions[sid]
@@ -84,7 +96,7 @@ def login(username, password):
 			session	 = newSession(username, eUser)
 			eUser['lastTouch'] = time.time()
 			usertable.update(eUser,['username'])
-			returnInfo = {"result":"sucess", "session":session['_id'], "message":"logged in", "username":username, "_id":username, "noteCount":eUser['noteCount']}
+			returnInfo = {"result":"OK", "session":session['_id'], "message":"logged in", "username":username, "_id":username, "noteCount":eUser['noteCount']}
 			print returnInfo
 			return returnInfo
 		wrongpass = {"result":"fail", "message":"incorrect password"}
@@ -115,6 +127,6 @@ def new_user(username, password):
 	newUser['password'] = hashlib.sha512(password + salt).hexdigest()
 	usertable.insert(newUser)
 	#database.users.insert(newUser)
-	print {"result":"sucess", "message":"account " + username + " created"}
+	print {"result":"OK", "message":"account " + username + " created"}
 	print usertable.find_one(username=username)
-	return {"result":"sucess", "message":"account " + username + " created"}
+	return {"result":"OK", "message":"account " + username + " created"}

@@ -7,8 +7,8 @@ import dblayer
 from pyramid.response import Response
 
 
-if not os.path.exists("ppsshots"):os.makedirs("kees/pplevels")
-if not os.path.exists("crashs"):os.makedirs("kees/thumbs")
+if not os.path.exists("kees/pplevels"):os.makedirs("kees/pplevels")
+if not os.path.exists("kees/thumbs"):os.makedirs("kees/thumbs")
 
 def pythonicVarName(field):
 	firstLetter = True
@@ -54,41 +54,56 @@ def my_view(request):
 #def my_view(request):
 #    return {"text":"hello"}
 
+@view_config(route_name='new_user', renderer='json')
+def new_user(request):
+	i = request.POST
+	username =  i['username']
+	print username
+	password =  i['password']
+	return dblayer.new_user(username,password)
+@view_config(route_name='login', renderer='json')
+def login(request):
+	i = request.POST
+	username =  i['username']
+	password =  i['password']
+	return dblayer.login(username,password)
+
+@view_config(route_name='query_levels', renderer='json')
+def query_levels(request):
+	i = request.POST
+	sortKey =  str(i['sortKey'])
+	cursor =  int(i['cursor'])
+	limit =  int(i['limit'])
+	print sortKey.__class__.__name__
+	print dir(sortKey)
+	print cursor.__class__.__name__
+	print dir(cursor)
+	print sortKey, cursor, limit
+	levels = dblayer.query_levels(sortKey,cursor,limit)
+	print levels
+	#return Response("OK")
+	return levels
 @view_config(route_name='uploadLevel', renderer='json')
 def uploadLevel(request):
 	i = request.POST
-	'''print i
-	print "POST uploading level"
-	for item in i:
-		print ""
-		print "key", item
-		print "item", i[item]
-		#print "dir", dir(i[item])
-		print "file", i[item].file.read()
-		#print "filedir", dir(i[item].file)
-		print "filename", i[item].filename'''
-	#userResult = authUser(i)
-	#print userResult
-	#if userResult != True: return fail(userResult)
+	session =  i['session'].file.read()
 	author =  i['author'].file.read()
 	name =  i['name'].file.read()
 	leveldata = i['leveldata'].file
 	sshot = i['sshot'].file
-
 	fullname = pythonicVarName(author+name)
+	if dblayer.add_level(session, name, author, fullname):
 
-	namepath = "kees/pplevels/" + fullname
-	write_a_file(namepath, leveldata)
 
-	#import base64
-	#ssdata = base64.b64decode(i.sshot)
-	namepath = "kees/thumbs/" + fullname+".png"
-	write_a_file(namepath, sshot)
-	
-	
-	dblayer.add_level(name,author,fullname)
-	return {"asdasd":"qweqwe"}
-	return Response("OK")
+		namepath = "kees/pplevels/" + fullname
+		write_a_file(namepath, leveldata)
+
+		namepath = "kees/thumbs/" + fullname+".png"
+		write_a_file(namepath, sshot)
+
+		return {"result":"OK"}
+	return {"result":"FAIL","dta":[session,author,name], "insessions":session in dblayer.sessions}
+	#return Response("OK")
 
 
 @view_config(route_name='store_mp3_view', renderer='json')

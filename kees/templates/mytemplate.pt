@@ -53,6 +53,7 @@
 
     <label for="mp3">Mp3</label>
     <input id="mp3" name="mp3" type="file" value="" />
+    <input id="sortKey" name="sortKey" type="text" value="filename" />
 
     <input type="submit" value="submit" />
 </form>
