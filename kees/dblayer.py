@@ -16,6 +16,46 @@ john = table.find_one(name='John Doe')
 print john
 '''
 
+def add_vote(session, val, dbid, docid):
+	sRef = getsession(session)
+	if not sRef:
+		return False
+	isNew = True
+	levelstable = db['pplevels']
+	record = levelstable.find_one(uid=docid)
+	print record, record==None
+	if record == None:
+		return {'result':'fail', 'reason':'voteable item not found'}
+	username = sRef['username']
+
+
+	votes_stable = db['votes']
+	# votes_meta_table = db['votes_meta']
+	# vote_meta = votes_meta_table.find_one(docid=docid)
+	# if not vote_meta:
+	# 	vote_meta = dict(docid=docid, votenum=1, rating=val, heat=1.)
+	# else:
+	vote = votes_stable.find_one(user=username, docid=docid)
+	votenum=record['ratingCount']
+	rating=record['rating']
+	#heat=record['heat']+1
+	print "Rating was, ", rating
+	if not vote:
+		vp1=float(votenum+1.)
+		rating=rating/vp1*votenum+val/(vp1)
+		votenum=vp1
+		print "new vote, rating now, ", rating
+	else:
+		oldval=vote['value']
+		rating=rating-oldval/votenum+val/votenum
+		print "re-vote, rating now, ", rating
+	vote_meta = dict(uid=docid, ratingCount=votenum, rating=rating)
+	levelstable.update(vote_meta,['docid'])
+
+	newVote = {"user":username, "value":val, "time":time.time(), "docid":docid}
+	votes_stable.upsert(newVote,['user', 'docid'])
+	return True
+
 def add_level(session, name, author, fullname):
 	ses = getsession(session)
 	if not ses:
@@ -30,6 +70,7 @@ def add_level(session, name, author, fullname):
 	else:
 		print "new"
 	newLevel = {}
+	newLevel['uid'] = uuid.uuid4().get_hex()
 	newLevel['name'] = name
 	newLevel['author'] = author
 	newLevel['filename'] = fullname
@@ -60,7 +101,7 @@ def getsession(session):
 		return False
 	sRef = sessions[session]
 	sRef['lastTouch'] = time.time()
-	return True
+	return sRef
 
 def newSession(username, userRef):
 	timeNow = time.time()
@@ -129,5 +170,3 @@ def new_user(username, password):
 	usertable.insert(newUser)
 	#database.users.insert(newUser)
 	print {"result":"OK", "message":"account " + username + " created"}
-	print usertable.find_one(username=username)
-	return {"result":"OK", "message":"account " + username + " created"}
