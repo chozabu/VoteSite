@@ -91,15 +91,30 @@ def query_levels(request):
 	sortKey =  str(i['sortKey'])
 	cursor =  int(i['cursor'])
 	limit =  int(i['limit'])
-	print sortKey.__class__.__name__
-	print dir(sortKey)
-	print cursor.__class__.__name__
-	print dir(cursor)
-	print sortKey, cursor, limit
 	levels = dblayer.query_levels(sortKey,cursor,limit)
-	print levels
 	#return Response("OK")
 	return levels
+
+@view_config(route_name='query_points', renderer='json')
+def query_points(request):
+	i = request.POST
+	sortKey =  str(i['sortKey'])
+	cursor =  int(i['cursor'])
+	limit =  int(i['limit'])
+	points = dblayer.query_points(sortKey,cursor,limit)
+	#return Response("OK")
+	return points
+
+
+@view_config(route_name='add_point', renderer='json')
+def add_point(request):
+	i = request.POST
+	session =  i['session']
+	print session
+	name =  i['name']
+	text =  i['text']
+	return dblayer.add_point(session, name, text)
+
 @view_config(route_name='uploadLevel', renderer='json')
 def uploadLevel(request):
 	i = request.POST

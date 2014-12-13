@@ -13,6 +13,8 @@ def main(global_config, **settings):
     config.add_route('store_mp3_view', '/store_mp3_view')
     config.add_route('uploadLevel', '/uploadLevel')
     config.add_route('query_levels', '/query_levels')
+    config.add_route('add_point', '/add_point')
+    config.add_route('query_points', '/query_points')
     config.add_route('login', '/login')
     config.add_route('new_user', '/new_user')
     config.add_route('uploadCrash', '/uploadCrash')

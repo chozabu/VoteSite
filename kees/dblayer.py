@@ -16,12 +16,11 @@ john = table.find_one(name='John Doe')
 print john
 '''
 
-def add_vote(session, val, dbid, docid):
+def add_vote(session, val, docid, dbid='pplevels'):
 	sRef = getsession(session)
 	if not sRef:
 		return False
-	isNew = True
-	levelstable = db['pplevels']
+	levelstable = db[dbid]
 	record = levelstable.find_one(uid=docid)
 	print record, record==None
 	if record == None:
@@ -56,6 +55,18 @@ def add_vote(session, val, dbid, docid):
 	votes_stable.upsert(newVote,['user', 'docid'])
 	return True
 
+def new_voteable(name, author):
+	newLevel = {}
+	newLevel['uid'] = uuid.uuid4().get_hex()
+	newLevel['name'] = name
+	newLevel['author'] = author
+	nowStamp = time.time()
+	newLevel['rating'] = .5
+	newLevel['ratingCount'] = 0
+	newLevel['dateAdded'] = nowStamp
+	newLevel['dateModified'] = nowStamp
+	return newLevel
+
 def add_level(session, name, author, fullname):
 	ses = getsession(session)
 	if not ses:
@@ -69,29 +80,40 @@ def add_level(session, name, author, fullname):
 		print "not new"
 	else:
 		print "new"
-	newLevel = {}
-	newLevel['uid'] = uuid.uuid4().get_hex()
-	newLevel['name'] = name
-	newLevel['author'] = author
-	newLevel['filename'] = fullname
-	now = str(datetime.datetime.now())
-	nowStamp = time.time()
 	if (isNew):
-		newLevel['rating'] = .5
-		newLevel['ratingCount'] = 0
-		newLevel['dateAdded'] = nowStamp
-		newLevel['downloads'] = 0
-	newLevel['dateModified'] = nowStamp
-	newLevel['description'] = "description"
-	newLevel['screenshot'] = "none"
-	#db.ppLevels[fullname] = newLevel
-	if isNew:
-		levelstable.insert(newLevel)
+		record = new_voteable(name,author)
+		record['filename'] = fullname
+		record['downloads'] = 0
 	else:
-		levelstable.update(newLevel,['filename'])
+		nowStamp = time.time()
+		record['dateModified'] = nowStamp
+	record['description'] = "description"
+	#db.ppLevels[fullname] = newLevel
+	levelstable.upsert(record,['filename'])
 	return True
+
+def add_point(session, name, text):
+	ses = getsession(session)
+	if not ses:
+		return False
+	author = ses['username']
+	isNew = True
+	levelstable = db['points']
+	#record = levelstable.find_one(filename=fullname)
+	record = new_voteable(name,author)
+	#record['filename'] = fullname
+	#record['downloads'] = 0
+	record['text'] = text
+	#db.ppLevels[fullname] = newLevel
+	levelstable.insert(record)
+	return record
 def query_levels(sortKey, cursor=0, limit=8, **_filter):
 	levelstable = db['pplevels']
+	print limit, cursor, sortKey
+	a= levelstable.find(_limit=limit, _offset=cursor, order_by=sortKey, **_filter)
+	return [x for x in a]
+def query_points(sortKey, cursor=0, limit=8, **_filter):
+	levelstable = db['points']
 	print limit, cursor, sortKey
 	a= levelstable.find(_limit=limit, _offset=cursor, order_by=sortKey, **_filter)
 	return [x for x in a]
