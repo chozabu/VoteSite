@@ -4,7 +4,22 @@
   <link rel="stylesheet" href="ct.css" type="text/css">
 </head>
 <body>
-<h1>KivEntEd Levels</h1>
+<h1>KivEntEd Points</h1>
+
+<form action="">
+name: <input type="text" name="username" id="username" value="guest">
+pass: <input type="text" name="password" id="password" value="nopass">
+
+<input id="loginButton" type="button" value="Login" onclick="login();" />
+</form>
+
+<form action="">
+Title: <input type="text" name="title" id="title">
+Text: <input type="text" name="text" id="text">
+
+<input id="addButton" type="button" value="Add" onclick="add_point();" />
+</form>
+
 <form action="">
 Sort by:
 <select name="sortType" id="sortType">
@@ -38,6 +53,14 @@ var page = document.getElementById("page");
 var perpage = document.getElementById("perpage");
 var reverse = document.getElementById("reversebox");
 
+var text = document.getElementById("text");
+var title = document.getElementById("title");
+
+var username = document.getElementById("username");
+var password = document.getElementById("password");
+
+var sessionID = "";
+
 /*var chatout = document.getElementById("chatout");
 var chatheader = document.getElementById("chatheader");
 var gForumID = getUrlVars()["forumID"];
@@ -49,6 +72,27 @@ var serverURL = 'http://www.kiventedserve.chozabu.net';*/
 var serverURL = '';
 
 //forumsout.innerHTML += "ho";
+
+
+function login(){
+	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
+	//		if self.reverseButton.state == 'down':params['reverse']=True
+	var params = {"username": username.value, "password":password.value};
+	if (reverse.checked){ params.sortKey = "-"+params.sortKey};
+	$.post(serverURL+'/login', params, handleLogin);
+	var forumIDNameDict = {};
+}
+
+function handleLogin(result){
+    //alert(result)
+    var result = JSON.parse(result)
+    if (result['session']){
+        sessionID = result['session'];
+        alert("logged in")
+    }else{
+        alert("log in failed")
+    }
+}
 
 updateListFromUI()
 function updateListFromUI(){
@@ -91,6 +135,18 @@ forumsout.innerHTML = "";
   if(gMsgID){
     $.getJSON('msg'+gMsgID+'.json', loadFullMsg);//showChildren(newThread);
   }*/
+}
+
+
+function add_point(){
+	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
+	//		if self.reverseButton.state == 'down':params['reverse']=True
+	var params = {"session": sessionID, "name":title.value, "text":text.value}
+	$.post(serverURL+'/add_point', params, reupdate);
+	var forumIDNameDict = {};
+}
+function reupdate(idk){
+    updateListFromUI();
 }
 
 function loadFullMsg(msgin){
