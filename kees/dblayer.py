@@ -49,7 +49,7 @@ def add_vote(session, val, docid, dbid='pplevels'):
 		rating=rating-oldval/votenum+val/votenum
 		print "re-vote, rating now, ", rating
 	vote_meta = dict(uid=docid, ratingCount=votenum, rating=rating)
-	levelstable.update(vote_meta,['docid'])
+	levelstable.update(vote_meta,['uid'])
 
 	newVote = {"user":username, "value":val, "time":time.time(), "docid":docid}
 	votes_stable.upsert(newVote,['user', 'docid'])

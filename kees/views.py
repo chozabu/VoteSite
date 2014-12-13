@@ -102,9 +102,28 @@ def query_points(request):
 	cursor =  int(i['cursor'])
 	limit =  int(i['limit'])
 	points = dblayer.query_points(sortKey,cursor,limit)
+	print points
 	#return Response("OK")
 	return points
 
+@view_config(route_name='add_vote', renderer='json')
+def add_vote(request):
+	i = request.POST
+	print i
+	dbid =  str(i['dbid'])
+	print dbid
+	if dbid not in ['points', 'pplevels']:
+		print "db not accepted"
+		return {"status":"fail"}
+	print "db accepted"
+	session =  str(i['session'])
+	print "session=", session
+	val =  float(i['val'])
+	print "val=", val
+	docid =  str(i['docid'])
+	print "docid=", docid
+
+	return dblayer.add_vote(session,val,docid,dbid)
 
 @view_config(route_name='add_point', renderer='json')
 def add_point(request):
