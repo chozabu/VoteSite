@@ -16,6 +16,7 @@ def main(global_config, **settings):
     config.add_route('add_point', '/add_point')
     config.add_route('add_vote', '/add_vote')
     config.add_route('query_points', '/query_points')
+    config.add_route('get_point', '/get_point')
     config.add_route('login', '/login')
     config.add_route('new_user', '/new_user')
     config.add_route('uploadCrash', '/uploadCrash')

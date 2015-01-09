@@ -97,6 +97,7 @@ def query_levels(request):
 
 @view_config(route_name='query_points', renderer='json')
 def query_points(request):
+	print "points"
 	i = request.POST
 	sortKey =  str(i['sortKey'])
 	cursor =  int(i['cursor'])
@@ -105,6 +106,19 @@ def query_points(request):
 	print points
 	#return Response("OK")
 	return points
+
+@view_config(route_name='get_point', renderer='json')
+def get_point(request):
+	print "HELLO"
+	i = request.POST
+	print i
+	docid =  i['id']
+	dbid =  'points'#i['dbid']
+	print "docid=",docid
+	point = dblayer.get_one(dbid, uid=docid)
+	print point
+	#return Response("OK")
+	return point
 
 @view_config(route_name='add_vote', renderer='json')
 def add_vote(request):
@@ -122,8 +136,9 @@ def add_vote(request):
 	print "val=", val
 	docid =  str(i['docid'])
 	print "docid=", docid
+	tag = i.get('tag', None)
 
-	return dblayer.add_vote(session,val,docid,dbid)
+	return dblayer.add_vote(session,val,docid,dbid,tag=tag)
 
 @view_config(route_name='add_point', renderer='json')
 def add_point(request):

@@ -16,7 +16,7 @@ john = table.find_one(name='John Doe')
 print john
 '''
 
-def add_vote(session, val, docid, dbid='pplevels'):
+def add_vote(session, val, docid, dbid='pplevels', tag=None):
 	sRef = getsession(session)
 	if not sRef:
 		return False
@@ -27,6 +27,7 @@ def add_vote(session, val, docid, dbid='pplevels'):
 		return {'result':'fail', 'reason':'voteable item not found'}
 	username = sRef['username']
 
+	istag = tag!=None
 
 	votes_stable = db['votes']
 	# votes_meta_table = db['votes_meta']
@@ -34,11 +35,20 @@ def add_vote(session, val, docid, dbid='pplevels'):
 	# if not vote_meta:
 	# 	vote_meta = dict(docid=docid, votenum=1, rating=val, heat=1.)
 	# else:
-	vote = votes_stable.find_one(user=username, docid=docid)
-	votenum=record['ratingCount']
-	rating=record['rating']
-	#heat=record['heat']+1
+	if not istag:
+		votenum=record['ratingCount']
+		rating=record['rating']
+		print "RATING working directly on record"
+	else:
+		print "TAG - working on meta"
+		votes_group_table = db['vote_groups']
+		vote_group = votes_group_table.find_one(dbid=dbid, docid=docid, tag=tag)
+		if not vote_group:
+			vote_group = new_vote_group(docid=docid, dbid=dbid, tag=tag)
+		votenum=vote_group['ratingCount']
+		rating=vote_group['rating']
 	print "Rating was, ", rating
+	vote = votes_stable.find_one(user=username, docid=docid)
 	if not vote:
 		vp1=float(votenum+1.)
 		rating=rating/vp1*votenum+val/(vp1)
@@ -48,8 +58,14 @@ def add_vote(session, val, docid, dbid='pplevels'):
 		oldval=vote['value']
 		rating=rating-oldval/votenum+val/votenum
 		print "re-vote, rating now, ", rating
-	vote_meta = dict(uid=docid, ratingCount=votenum, rating=rating)
-	levelstable.update(vote_meta,['uid'])
+
+	if not istag:
+		vote_meta = dict(uid=docid, ratingCount=votenum, rating=rating)
+		levelstable.update(vote_meta,['uid'])
+	else:
+		vote_group['ratingCount']=votenum
+		vote_group['rating']=rating
+		votes_group_table.upsert(vote_group, ['uid'])
 
 	newVote = {"user":username, "value":val, "time":time.time(), "docid":docid}
 	votes_stable.upsert(newVote,['user', 'docid'])
@@ -60,6 +76,19 @@ def new_voteable(name, author):
 	newLevel['uid'] = uuid.uuid4().get_hex()
 	newLevel['name'] = name
 	newLevel['author'] = author
+	nowStamp = time.time()
+	newLevel['rating'] = .5
+	newLevel['ratingCount'] = 0
+	newLevel['dateAdded'] = nowStamp
+	newLevel['dateModified'] = nowStamp
+	return newLevel
+
+def new_vote_group(docid, dbid, tag):
+	newLevel = {}
+	newLevel['uid'] = uuid.uuid4().get_hex()
+	newLevel['docid'] = docid
+	newLevel['dbid'] = dbid
+	newLevel['tag'] = tag
 	nowStamp = time.time()
 	newLevel['rating'] = .5
 	newLevel['ratingCount'] = 0
@@ -117,6 +146,14 @@ def query_points(sortKey, cursor=0, limit=8, **_filter):
 	print limit, cursor, sortKey
 	a= levelstable.find(_limit=limit, _offset=cursor, order_by=sortKey, **_filter)
 	return [x for x in a]
+def get_one(dbid, **_filter):
+	print "get_one"
+	print dbid
+	levelstable = db[dbid]
+	print levelstable
+	a= levelstable.find_one(**_filter)
+	print a
+	return a
 
 def getsession(session):
 	if sessions.has_key(session) == False:
