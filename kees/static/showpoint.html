@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="ct.css" type="text/css">
 </head>
 <body>
-<h1>KivEntEd Points</h1>
+<h1>KivEntEd Point</h1>
 
 <form action="">
 name: <input type="text" name="username" id="username" value="Guest">
@@ -13,31 +13,7 @@ pass: <input type="text" name="password" id="password" value="nopassword">
 <input id="loginButton" type="button" value="Login" onclick="login();" />
 </form>
 
-<form action="">
-Title: <input type="text" name="title" id="title">
-Text: <input type="text" name="text" id="text">
 
-<input id="addButton" type="button" value="Add" onclick="add_point();" />
-</form>
-
-<form action="">
-Sort by:
-<select name="sortType" id="sortType">
-
-<option value="name">Name</option>
-<option value="author">Author</option>
-<option value="rating">Rating</option>
-<option value="dateAdded">Date Added</option>
-<option value="dateModified">Date Modified</option>
-<option value="downloads">Downloads</option>
-</select>
-
-Per Page: <input type="number" name="perpage" id="perpage" min="1" max="100" value="10">
-Start at page: <input type="number" name="page" id="page" min="0" value="0">
-
-<input id="goButton" type="button" value="Go" onclick="updateListFromUI();" />
-<input type="checkbox" name="reversebox" id="reversebox" value="Reverse">Reverse sort<br>
-</form>
 <div id="forumsout"></div>
 <div id="chatoutcontainer">
   <div id="chatheader"></div>
@@ -60,6 +36,7 @@ var username = document.getElementById("username");
 var password = document.getElementById("password");
 
 var sessionID = "";
+var urlvars = getUrlVars()
 
 /*var chatout = document.getElementById("chatout");
 var chatheader = document.getElementById("chatheader");
@@ -72,6 +49,14 @@ var serverURL = 'http://www.kiventedserve.chozabu.net';*/
 var serverURL = '';
 
 //forumsout.innerHTML += "ho";
+
+function getUrlVars() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    vars[key] = value;
+  });
+  return vars;
+}
 
 
 function login(){
@@ -98,9 +83,10 @@ updateListFromUI()
 function updateListFromUI(){
 	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
 	//		if self.reverseButton.state == 'down':params['reverse']=True
-	var params = {"sortKey": stype.value, "cursor":page.value*perpage.value, "limit":perpage.value}
-	if (reverse.checked){ params.sortKey = "-"+params.sortKey};
-	$.post(serverURL+'/query_points', params, handleForums);
+	var params = {"id": urlvars['ID']}
+    console.log(serverURL+'/get_point')
+    console.log(params)
+	$.post(serverURL+'/get_point', params, handleForums);
 	var forumIDNameDict = {};
 }
 
@@ -113,14 +99,13 @@ forumsout.innerHTML = "";
 //forumsout.innerHTML += "hi";
 //forumsout.innerHTML += forums;
 //forumsout.innerHTML += "ha";
-  for (fkey in fdata){
+  if (1){
   //{"rating": 2.5, "dateAdded": 1403638091.03871, "name": "thechozmachine", "screenshot": "none", "author": "Guest", "downloads": 2, "filename": "guestthechozmachine", "ratingCount": 0, "dateModified": 1403684117.484517, "description": "description"}
-    f = fdata[fkey];
+    f = fdata;
     console.log(f);
     if (1){
-      var instantlink = '<a href="showpoint.html?ID='+f['uid']+'">'+f['name']+'</a>';
-      //var instantlink = '<a href="showpoint.html?ID=1>hi</a>';
-      //var instantlink = f['name'];
+      //var instantlink = '<a href="#?forumID='+f['filename']+'" onclick="loadForum(\''+f['filename']+'\');">'+f['name']+'</a>';
+      var instantlink = f['name'];
       //var image = '<img src="../thumbs/'+f['filename']+'.png" />';
       var infos = 'Created by: '+f['author']+' @ '+f['dateAdded']
       var infos2 = f['rating']+' rating. last change: '+f['dateModified']
