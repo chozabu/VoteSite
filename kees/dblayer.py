@@ -71,6 +71,13 @@ def add_vote(session, val, docid, dbid='pplevels', tag=None):
 	votes_stable.upsert(newVote,['user', 'docid'])
 	return True
 
+def get_tags(docid):
+	votes_group_table = db['vote_groups']
+	rawtags = votes_group_table.find(docid=docid)
+	tags = [x for x in rawtags]
+	print "tags=", tags
+	return tags
+
 def new_voteable(name, author):
 	newLevel = {}
 	newLevel['uid'] = uuid.uuid4().get_hex()

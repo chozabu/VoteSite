@@ -90,6 +90,18 @@ function updateListFromUI(){
 	var forumIDNameDict = {};
 }
 
+function handleTags(forums) {
+    console.log(forums)
+    var fdata = JSON.parse(forums)
+    console.log(fdata)
+    if (1) {
+        //{"rating": 2.5, "dateAdded": 1403638091.03871, "name": "thechozmachine", "screenshot": "none", "author": "Guest", "downloads": 2, "filename": "guestthechozmachine", "ratingCount": 0, "dateModified": 1403684117.484517, "description": "description"}
+        f = fdata;
+
+      forumsout.innerHTML += "OK<br>";
+      forumsout.innerHTML += f;
+    }
+}
 function handleForums(forums){
 console.log(forums)
 var fdata = JSON.parse(forums)
@@ -119,6 +131,12 @@ forumsout.innerHTML = "";
         "</form>"
       //var instantlink = f['name'];
       forumsout.innerHTML += "<li>"+instantlink+"<br>"+infos+"<br>"+infos2+"<br>"+text+"</li><br>"+votepanel+"<br>";
+
+      forumsout.innerHTML += "Tags:<br>";
+        var params = {"id": urlvars['ID']}
+        console.log(serverURL+'/get_tags')
+        console.log(params)
+        $.post(serverURL+'/get_tags', params, handleTags);
       //forumIDNameDict[f['filename']] = f['name'];
     }
   }
