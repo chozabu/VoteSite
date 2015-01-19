@@ -48,15 +48,25 @@ def add_vote(session, val, docid, dbid='pplevels', tag=None):
 		votenum=vote_group['ratingCount']
 		rating=vote_group['rating']
 	print "Rating was, ", rating
+	print username,docid
 	vote = votes_stable.find_one(user=username, docid=docid)
+	print "-------------"
+	print "vote=",vote
+	print "val=", val
+	print ""
 	if not vote:
 		vp1=float(votenum+1.)
+		print "vp1=",vp1
 		rating=rating/vp1*votenum+val/(vp1)
 		votenum=vp1
 		print "new vote, rating now, ", rating
 	else:
 		oldval=vote['value']
-		rating=rating-oldval/votenum+val/votenum
+		print oldval, votenum
+		if votenum<1:
+			rating=val
+		else:
+			rating=rating-oldval/votenum+val/votenum
 		print "re-vote, rating now, ", rating
 
 	if not istag:
@@ -69,6 +79,7 @@ def add_vote(session, val, docid, dbid='pplevels', tag=None):
 
 	newVote = {"user":username, "value":val, "time":time.time(), "docid":docid}
 	votes_stable.upsert(newVote,['user', 'docid'])
+	print "xoxoxoxoxoxoxoxoxoxoxox"
 	return True
 
 def get_tags(docid):

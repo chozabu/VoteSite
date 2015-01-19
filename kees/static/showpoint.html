@@ -13,6 +13,13 @@ pass: <input type="text" name="password" id="password" value="nopassword">
 <input id="loginButton" type="button" value="Login" onclick="login();" />
 </form>
 
+<form action="">
+Tag: <input type="text" name="taginput" id="taginput" value="TestTag">
+Value: <input id="tvslider" type="range" name="tvslider" min="0" max="10">
+
+<input id="add_tagButton" type="button" value="Tag" onclick="add_tag();" />
+</form>
+
 
 <div id="forumsout"></div>
 <div id="chatoutcontainer">
@@ -34,6 +41,9 @@ var title = document.getElementById("title");
 
 var username = document.getElementById("username");
 var password = document.getElementById("password");
+
+var taginput = document.getElementById("taginput");
+var tvslider = document.getElementById("tvslider");
 
 var sessionID = "";
 var urlvars = getUrlVars()
@@ -63,7 +73,6 @@ function login(){
 	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
 	//		if self.reverseButton.state == 'down':params['reverse']=True
 	var params = {"username": username.value, "password":password.value};
-	if (reverse.checked){ params.sortKey = "-"+params.sortKey};
 	$.post(serverURL+'/login', params, handleLogin);
 	var forumIDNameDict = {};
 }
@@ -91,15 +100,18 @@ function updateListFromUI(){
 }
 
 function handleTags(forums) {
+    console.log("GOT TAGS")
     console.log(forums)
     var fdata = JSON.parse(forums)
     console.log(fdata)
-    if (1) {
-        //{"rating": 2.5, "dateAdded": 1403638091.03871, "name": "thechozmachine", "screenshot": "none", "author": "Guest", "downloads": 2, "filename": "guestthechozmachine", "ratingCount": 0, "dateModified": 1403684117.484517, "description": "description"}
-        f = fdata;
-
-      forumsout.innerHTML += "OK<br>";
-      forumsout.innerHTML += f;
+  for (fkey in fdata){
+    f = fdata[fkey];
+        console.log();
+        console.log(f);
+      forumsout.innerHTML += "<br>";
+      forumsout.innerHTML += f['tag'];
+      forumsout.innerHTML += " ";
+      forumsout.innerHTML += f['rating'];
     }
 }
 function handleForums(forums){
@@ -153,6 +165,16 @@ function vote(docid, val){
     val=val*.1;
     console.log(val);
 	var params = {"session": sessionID,"val": val,"docid": docid,"dbid": 'points'}
+	$.post(serverURL+'/add_vote', params, reupdate);
+}
+
+
+function add_tag(){
+    tag=taginput.value
+    val=tvslider.value*.1;
+    docid=urlvars['ID']
+	var params = {"session": sessionID,"val": val,"docid": docid,"dbid": 'points', "tag":tag}
+    console.log(params);
 	$.post(serverURL+'/add_vote', params, reupdate);
 }
 
