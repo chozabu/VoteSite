@@ -114,7 +114,7 @@ def new_vote_group(docid, dbid, tag):
 	newLevel['dateModified'] = nowStamp
 	return newLevel
 
-def add_level(session, name, author, fullname):
+def add_level(session, name, author, fullname, tags_str=None, tags=[]):
 	ses = getsession(session)
 	if not ses:
 		return False
@@ -137,6 +137,11 @@ def add_level(session, name, author, fullname):
 	record['description'] = "description"
 	#db.ppLevels[fullname] = newLevel
 	levelstable.upsert(record,['filename'])
+	if tags_str:
+		tags = tags_str.split()
+	if tags:
+		for t in tags:
+			add_vote(session, 1, fullname, 'pplevels', tag=t)
 	return True
 
 def add_point(session, name, text):

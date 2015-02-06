@@ -167,7 +167,8 @@ def uploadLevel(request):
 	leveldata = i['leveldata'].file
 	sshot = i['sshot'].file
 	fullname = pythonicVarName(author+name)
-	if dblayer.add_level(session, name, author, fullname):
+	tags = i.get("tags_str")
+	if dblayer.add_level(session, name, author, fullname, tags):
 
 
 		namepath = "kees/pplevels/" + fullname
