@@ -75,7 +75,8 @@ forumsout.innerHTML = "";
     console.log(f);
     if (1){
       //var instantlink = '<a href="#?forumID='+f['filename']+'" onclick="loadForum(\''+f['filename']+'\');">'+f['name']+'</a>';
-      var instantlink = f['name'];
+      //var instantlink = f['name'];
+      var instantlink = '<a href="showlevel.html?ID='+f['uid']+'">'+f['name']+'</a>';
       var image = '<img src="../thumbs/'+f['filename']+'.png" />';
       var infos = 'Created by: '+f['author']+' @ '+f['dateAdded']
       var infos2 = f['downloads']+' downloads. last change: '+f['dateModified']

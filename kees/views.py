@@ -112,6 +112,7 @@ def get_tags(request):
 	i = request.POST
 	print i
 	docid =  i['id']
+	print "requesting: ", docid
 	tags = dblayer.get_tags(docid)
 	print tags
 	return tags
@@ -123,6 +124,18 @@ def get_point(request):
 	print i
 	docid =  i['id']
 	dbid =  'points'#i['dbid']
+	print "docid=",docid
+	point = dblayer.get_one(dbid, uid=docid)
+	print point
+	return point
+
+@view_config(route_name='get_level', renderer='json')
+def get_level(request):
+	print "HELLO"
+	i = request.POST
+	print i
+	docid =  i['id']
+	dbid =  'pplevels'#i['dbid']
 	print "docid=",docid
 	point = dblayer.get_one(dbid, uid=docid)
 	print point
@@ -167,7 +180,7 @@ def uploadLevel(request):
 	leveldata = i['leveldata'].file
 	sshot = i['sshot'].file
 	fullname = pythonicVarName(author+name)
-	tags = i.get("tags_str")
+	tags = i.get("tags_str").file.read()
 	if dblayer.add_level(session, name, author, fullname, tags):
 
 

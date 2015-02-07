@@ -20,8 +20,12 @@ def add_vote(session, val, docid, dbid='pplevels', tag=None):
 	sRef = getsession(session)
 	if not sRef:
 		return False
+	print val, docid, dbid, tag
 	levelstable = db[dbid]
+	for l in levelstable:
+		print l
 	record = levelstable.find_one(uid=docid)
+	print docid
 	print record, record==None
 	if record == None:
 		return {'result':'fail', 'reason':'voteable item not found'}
@@ -76,14 +80,20 @@ def add_vote(session, val, docid, dbid='pplevels', tag=None):
 		vote_group['ratingCount']=votenum
 		vote_group['rating']=rating
 		votes_group_table.upsert(vote_group, ['uid'])
+		for v in votes_group_table:
+			print v
 
 	newVote = {"user":username, "value":val, "time":time.time(), "docid":docid}
 	votes_stable.upsert(newVote,['user', 'docid'])
 	print "xoxoxoxoxoxoxoxoxoxoxox"
+	for v in votes_stable:
+		print v
 	return True
 
 def get_tags(docid):
 	votes_group_table = db['vote_groups']
+	for v in votes_group_table:
+		print v['docid']
 	rawtags = votes_group_table.find(docid=docid)
 	tags = [x for x in rawtags]
 	print "tags=", tags
@@ -137,11 +147,14 @@ def add_level(session, name, author, fullname, tags_str=None, tags=[]):
 	record['description'] = "description"
 	#db.ppLevels[fullname] = newLevel
 	levelstable.upsert(record,['filename'])
+	print "tags_str:", tags_str
 	if tags_str:
 		tags = tags_str.split()
+	print "tags:", tags
 	if tags:
 		for t in tags:
-			add_vote(session, 1, fullname, 'pplevels', tag=t)
+			print "adding tag:", t
+			add_vote(session, 1, record['uid'], 'pplevels', tag=t)
 	return True
 
 def add_point(session, name, text):
