@@ -85,6 +85,16 @@ def login(request):
 	password =  i['password']
 	return dblayer.login(username,password)
 
+@view_config(route_name='complex_query_levels', renderer='json')
+def complex_query_levels(request):
+	i = request.POST
+	'''sortKey =  str(i['sortKey'])
+	cursor =  int(i['cursor'])
+	limit =  int(i['limit'])'''
+	levels = dblayer.complex_query_levels()
+	#return Response("OK")
+	return levels
+
 @view_config(route_name='query_levels', renderer='json')
 def query_levels(request):
 	i = request.POST

@@ -172,6 +172,42 @@ def add_point(session, name, text):
 	#db.ppLevels[fullname] = newLevel
 	levelstable.insert(record)
 	return record
+def qq(**kwargs):
+	return complex_query_levels(**kwargs)
+
+#find levels with information from other tables
+def complex_query_levels(sortKeydb='vote_groups', sortkeydata='rating', tag='boardz', tagmin=0.0, cursor=0, limit=8):
+	#levelstable = db['pplevels']
+	#print [x for x in
+#	qs1='''
+#SELECT pplevels.name, pplevels.uid, vote_groups.rating, vote_groups.tag
+#FROM pplevels JOIN vote_groups
+#ON pplevels.uid=vote_groups.docid
+#WHERE vote_groups.tag="boardz"
+#AND vote_groups.rating>0.5
+#ORDER BY vote_groups.rating
+#limit 0,8
+#'''
+#	print qs1
+#	db.query(qs1)
+	#return
+	qs2='''
+SELECT pplevels.name, pplevels.uid, vote_groups.rating, vote_groups.tag
+FROM pplevels JOIN vote_groups
+ON pplevels.uid=vote_groups.docid
+WHERE vote_groups.tag="{}"
+AND vote_groups.rating>{}
+ORDER BY {}.{}
+limit {},{}
+'''.format(tag, tagmin, sortKeydb, sortkeydata, cursor, limit)
+	print qs2
+	result = db.query(qs2)
+
+	rlist = [r for r in result]
+	print "complex query", tag, tagmin, sortKeydb, sortkeydata, cursor, limit
+	print "returned", rlist
+	return rlist
+
 def query_levels(sortKey, cursor=0, limit=8, **_filter):
 	levelstable = db['pplevels']
 	print limit, cursor, sortKey
