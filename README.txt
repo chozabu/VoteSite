@@ -15,9 +15,15 @@ A points dependant points will be below it.
 Higher ranked points will be to the left.  
   
 This should quickly give an impression of a points popularity, and accuracy  
-
-To test:
-python runit.py
-
-Depends:
-pip install paste
+  
+To test: 
+python runit.py  
+  
+Depends:  
+sudo pip install paste  
+sudo pip install PasteDeploy  
+sudo pip install waitress  
+sudo pip install pyramid  
+sudo pip install pyramid_debugtoolbar  
+sudo pip install pyramid_chameleon  
+sudo pip install dataset  
