@@ -15,3 +15,9 @@ A points dependant points will be below it.
 Higher ranked points will be to the left.  
   
 This should quickly give an impression of a points popularity, and accuracy  
+
+To test:
+python runit.py
+
+Depends:
+pip install paste

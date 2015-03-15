@@ -9,7 +9,7 @@ import sys, os
 from paste.deploy import loadapp
 application = loadapp(
     'config:' + 
-    os.path.expanduser('/home/chozabu/git/KEES/development.ini'))
+    os.path.expanduser(os.getcwd()+'/development.ini'))
 
 server = make_server('0.0.0.0', 8080, application)
 server.serve_forever()
