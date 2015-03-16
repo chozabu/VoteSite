@@ -47,7 +47,7 @@
               <li><i class="glyphicon glyphicon-globe icon-muted"></i><a href="irc://irc.freenode.net#pyramid">IRC Channel</a></li>
               <li><i class="glyphicon glyphicon-home icon-muted"></i><a href="http://pylonsproject.org">Pylons Project</a></li>
           </div>
-        </div>-->
+        </div>
      <form action="/store_mp3_view" method="post" accept-charset="utf-8"
       enctype="multipart/form-data">
 
@@ -56,8 +56,8 @@
     <input id="sortKey" name="sortKey" type="text" value="filename" />
 
     <input type="submit" value="submit" />
-</form>
-        <a href="${request.static_url('kees:static/listlevels.html')}">
+</form>-->
+        <a href="${request.static_url('kees:static/listpoints.html')}"> List Points 
             <img class="logo img-responsive" src="${request.static_url('kees:static/pyramid.png')}" alt="pyramid web framework">
         </a>
         <!--
