@@ -57,6 +57,9 @@
 
     <input type="submit" value="submit" />
 </form>-->
+        <a href="${request.static_url('kees:static/listpoints.html')}"> Create Account 
+         </a>
+         <br><br>
         <a href="${request.static_url('kees:static/listpoints.html')}"> List Points 
             <img class="logo img-responsive" src="${request.static_url('kees:static/pyramid.png')}" alt="pyramid web framework">
         </a>

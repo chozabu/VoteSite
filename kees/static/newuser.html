@@ -1,0 +1,162 @@
+<html>
+<head>
+  <title>KivEnt Server</title>
+  <link rel="stylesheet" href="ct.css" type="text/css">
+</head>
+<body>
+<h1>Create user</h1>
+
+<form action="">
+name: <input type="text" name="username" id="username" value="Guest">
+pass: <input type="text" name="password" id="password" value="nopassword">
+
+<input id="loginButton" type="button" value="Create" onclick="login();" />
+</form>
+<!--
+<form action="">
+Title: <input type="text" name="title" id="title">
+Text: <input type="text" name="text" id="text">
+
+<input id="addButton" type="button" value="Add" onclick="add_point();" />
+</form>
+
+<form action="">
+Sort by:
+<select name="sortType" id="sortType">
+
+<option value="name">Name</option>
+<option value="author">Author</option>
+<option value="rating">Rating</option>
+<option value="dateAdded">Date Added</option>
+<option value="dateModified">Date Modified</option>
+<option value="downloads">Downloads</option>
+</select>
+
+Per Page: <input type="number" name="perpage" id="perpage" min="1" max="100" value="10">
+Start at page: <input type="number" name="page" id="page" min="0" value="0">
+
+<input id="goButton" type="button" value="Go" onclick="updateListFromUI();" />
+<input type="checkbox" name="reversebox" id="reversebox" value="Reverse">Reverse sort<br>
+</form>
+-->
+<div id="forumsout"></div>
+<div id="chatoutcontainer">
+  <div id="chatheader"></div>
+  <div id="chatout"></div>
+</div>
+
+<script src="zepto.min.js"></script>
+<script>
+//['name', 'author', 'rating', 'dateAdded', 'downloads', 'dateModified']
+var forumsout = document.getElementById("forumsout");
+var page = document.getElementById("page");
+var perpage = document.getElementById("perpage");
+var reverse = document.getElementById("reversebox");
+
+var text = document.getElementById("text");
+var title = document.getElementById("title");
+
+var username = document.getElementById("username");
+var password = document.getElementById("password");
+
+var sessionID = "";
+
+/*var chatout = document.getElementById("chatout");
+var chatheader = document.getElementById("chatheader");
+var gForumID = getUrlVars()["forumID"];
+var gMsgID = getUrlVars()["msgID"];
+var onlymouseover = "false";//getUrlVars()["onlymouseover"];
+var gThreadList = [];
+
+var serverURL = 'http://www.kiventedserve.chozabu.net';*/
+var serverURL = '';
+
+//forumsout.innerHTML += "ho";
+
+
+function login(){
+	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
+	//		if self.reverseButton.state == 'down':params['reverse']=True
+	var params = {"username": username.value, "password":password.value};
+	$.post(serverURL+'/new_user', params, handleLogin);
+	var forumIDNameDict = {};
+}
+
+function handleLogin(result){
+    //alert(result)
+    var result = JSON.parse(result)
+    if (result['session']){
+        sessionID = result['session'];
+        alert("logged in")
+    }else{
+        alert("log in failed")
+    }
+}
+
+
+
+function handleForums(forums){
+console.log(forums)
+var fdata = JSON.parse(forums)
+//fdata = fdata.data;
+console.log(fdata)
+forumsout.innerHTML = "";
+//forumsout.innerHTML += "hi";
+//forumsout.innerHTML += forums;
+//forumsout.innerHTML += "ha";
+  for (fkey in fdata){
+  //{"rating": 2.5, "dateAdded": 1403638091.03871, "name": "thechozmachine", "screenshot": "none", "author": "Guest", "downloads": 2, "filename": "guestthechozmachine", "ratingCount": 0, "dateModified": 1403684117.484517, "description": "description"}
+    f = fdata[fkey];
+    console.log(f);
+    if (1){
+      var instantlink = '<a href="showpoint.html?ID='+f['uid']+'">'+f['name']+'</a>';
+      //var instantlink = '<a href="showpoint.html?ID=1>hi</a>';
+      //var instantlink = f['name'];
+      //var image = '<img src="../thumbs/'+f['filename']+'.png" />';
+      var infos = 'Created by: '+f['author']+' @ '+f['dateAdded']
+      var infos2 = f['rating']+' rating. last change: '+f['dateModified']
+      var text = f['text'];
+      var votepanel =  "<form action=\"\">" + 
+        //"name: <input type=\"text\" name=\"username\" id=\"username\" value=\"Guest\">" +
+        //"pass: <input type=\"text\" name=\"password\" id=\"password\" value=\"nopassword\">" +
+        "<input id=\"vslider\" type=\"range\" name=\"points\" min=\"0\" max=\"10\">" +
+        "<input id=\"docid\" type=\"hidden\" name=\"docid\" value=\""+f['uid']+"\">" +
+        "<input id=\"voteButton\" type=\"button\" value=\"Vote\" onclick=\"vote(docid.value, vslider.value);\" />" +
+        "</form>"
+      //var instantlink = f['name'];
+      forumsout.innerHTML += "<li>"+instantlink+"<br>"+infos+"<br>"+infos2+"<br>"+text+"</li><br>"+votepanel+"<br>";
+      //forumIDNameDict[f['filename']] = f['name'];
+    }
+  }
+  /*if(gForumID){
+    loadForum(gForumID);
+  }
+  if(gMsgID){
+    $.getJSON('msg'+gMsgID+'.json', loadFullMsg);//showChildren(newThread);
+  }*/
+}
+
+function vote(docid, val){
+    console.log(docid);
+    val=val*.1;
+    console.log(val);
+	var params = {"session": sessionID,"val": val,"docid": docid,"dbid": 'points'}
+	$.post(serverURL+'/add_vote', params, reupdate);
+}
+
+
+function add_point(){
+	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
+	//		if self.reverseButton.state == 'down':params['reverse']=True
+	var params = {"session": sessionID, "name":title.value, "text":text.value}
+	$.post(serverURL+'/add_point', params, reupdate);
+	var forumIDNameDict = {};
+}
+function reupdate(idk){
+    console.log(idk)
+    updateListFromUI();
+}
+
+</script>
+</body>
+</html>
