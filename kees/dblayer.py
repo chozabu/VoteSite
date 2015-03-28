@@ -120,6 +120,21 @@ def new_vote_group(docid, dbid, tag):
 	return newLevel
 
 
+
+def add_connection(session, a, b, ctype):
+	ses = getsession(session)
+	if not ses:
+		return False
+	author = ses['username']
+	isNew = True
+	ctable = db['connections']
+	#TODO CHECK IF A AND B EXIST?
+	#record = levelstable.find_one(filename=fullname)
+	record = new_connection(a, b, author, ctype)
+	#db.ppLevels[fullname] = newLevel
+	ctable.insert(record)
+	return record
+
 def add_point(session, name, text):
 	ses = getsession(session)
 	if not ses:
