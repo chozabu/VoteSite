@@ -122,7 +122,7 @@ def query_points(request):
 	print "querying", sortKey,cursor,limit
 	points = dblayer.query_points(sortKey,cursor,limit)
 	print "returning, ", points
-	return points'''
+	return points
 
 	print "TAGS"
 	i = request.POST
@@ -131,7 +131,7 @@ def query_points(request):
 	print "requesting: ", docid
 	tags = dblayer.get_tags(docid)
 	print tags
-	return tags
+	return tags'''
 
 '''@view_config(route_name='get_point', renderer='json')
 def get_point(request):
@@ -143,7 +143,7 @@ def get_point(request):
 	print "docid=",docid
 	point = dblayer.get_one(dbid, uid=docid)
 	print point
-	return point'''
+	return point
 
 	print "HELLO"
 	i = request.POST
@@ -153,7 +153,7 @@ def get_point(request):
 	print "docid=",docid
 	point = dblayer.get_one(dbid, uid=docid)
 	print point
-	return point
+	return point'''
 
 @view_config(route_name='add_vote', renderer='json')
 def add_vote(request):
