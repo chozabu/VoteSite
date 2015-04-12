@@ -14,7 +14,7 @@ pass: <input type="text" name="password" id="password" value="nopassword">
 </form>
 
 <form action="">
-Title: <input type="text" name="title" id="title">
+<!--Title: <input type="text" name="title" id="title">-->
 Text: <input type="text" name="text" id="text">
 
 <input id="addButton" type="button" value="Add" onclick="add_point();" />
@@ -54,7 +54,7 @@ var perpage = document.getElementById("perpage");
 var reverse = document.getElementById("reversebox");
 
 var text = document.getElementById("text");
-var title = document.getElementById("title");
+//var title = document.getElementById("title");
 
 var username = document.getElementById("username");
 var password = document.getElementById("password");
@@ -100,7 +100,8 @@ function updateListFromUI(){
 	//		if self.reverseButton.state == 'down':params['reverse']=True
 	var params = {"sortKey": stype.value, "cursor":page.value*perpage.value, "limit":perpage.value}
 	if (reverse.checked){ params.sortKey = "-"+params.sortKey};
-	$.post(serverURL+'/query_points', params, handleForums);
+	//$.post(serverURL+'/query_points', params, handleForums);
+	$.post(serverURL+'/get_points', params, handleForums);
 	var forumIDNameDict = {};
 }
 
@@ -157,7 +158,7 @@ function vote(docid, val){
 function add_point(){
 	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
 	//		if self.reverseButton.state == 'down':params['reverse']=True
-	var params = {"session": sessionID, "name":title.value, "text":text.value}
+	var params = {"session": sessionID, "text":text.value}
 	$.post(serverURL+'/add_point', params, reupdate);
 	var forumIDNameDict = {};
 }

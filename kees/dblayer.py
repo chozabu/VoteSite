@@ -18,6 +18,7 @@ Base.metadata.create_all(engine)
 s = session()
 #db
 
+
 import datetime, time
 import dataset
 import uuid, hashlib
@@ -31,7 +32,14 @@ sessions = {}
 def listProposals():
 	#s=session()
 	sqp = s.query(Post).all()
-	return [x.__dict__ for x in sqp]
+	rs =  [x.__dict__ for x in sqp]
+	for x in rs:
+		try:
+			del x['_sa_instance_state']
+			del x['created']
+		except:
+			pass
+	return rs
 
 def viewProposal(prop_id):
 	return [x.__dict__ for x in s.query(Post).filter(Post.id==prop_id).all()]
@@ -42,7 +50,7 @@ def createProposal(sid, PropText):
 	if not ses:
 		return False
 	author = authorFromSes(ses)
-	print author
+	print author, PropText
 	#author = ses['username']
 	testpoint = Post(author=author, name=PropText)
 	s.add(testpoint)
@@ -145,3 +153,6 @@ def new_user(username, password):
 	s.add(newuser)
 	s.commit()
 	print {"result":"OK", "message":"account " + username + " created"}
+
+
+new_user("Guest", "nopassword")
