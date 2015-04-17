@@ -74,7 +74,7 @@ def createProposal(sid, PropText):
 		return False
 	author = authorFromSes(ses)
 	print author, PropText
-	testpoint = Post(author=author, name=PropText, votenum=0)
+	testpoint = Post(author=author, name=PropText, votenum=0, rating=.0)
 	s.add(testpoint)
 	s.commit()
 	
