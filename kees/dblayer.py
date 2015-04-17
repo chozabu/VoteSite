@@ -6,6 +6,7 @@ fp = 'mydatabase.sqlite'
 if os.path.exists(fp):
     os.remove(fp)
 
+from sqlalchemy.sql import func
 from sqlalchemy import create_engine
 engine = create_engine('sqlite:///mydatabase.sqlite')
 #db = dataset.connect('sqlite:///mydatabase.db')
@@ -52,7 +53,7 @@ def createProposal(sid, PropText):
 	author = authorFromSes(ses)
 	print author, PropText
 	#author = ses['username']
-	testpoint = Post(author=author, name=PropText)
+	testpoint = Post(author=author, name=PropText, votenum=0)
 	s.add(testpoint)
 	s.commit()
 	
@@ -63,8 +64,17 @@ def voteProposal(sid, prop_id, value):
 		return False
 	author = authorFromSes(ses)
 	point = s.query(Post).get(prop_id)
+	print "new vote of: ", value, " on ", point.name, " by ", author.name
 	v = VotePost(author=author, post=point,value=value)
+
 	s.add(v)
+	s.commit()
+
+
+	point.votenum+=1
+	q= s.query(func.avg(VotePost.value).label('average')).filter(VotePost.post_id==point.id).one()
+	print "new average:, ", q, " old average: ", point.rating
+	point.rating=q[0]
 	s.commit()
 def joinProposal(sid, prop_id, prop_id2, cType):
 	ses = getsession(sid)

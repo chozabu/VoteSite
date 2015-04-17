@@ -103,7 +103,7 @@ forumsout.innerHTML = "";
       var text = f['text'];
       var votepanel =  "<form action=\"\">" +
         "<input id=\"vslider\" type=\"range\" name=\"points\" min=\"0\" max=\"10\">" +
-        "<input id=\"docid\" type=\"hidden\" name=\"docid\" value=\""+f['uid']+"\">" +
+        "<input id=\"docid\" type=\"hidden\" name=\"docid\" value=\""+f['id']+"\">" +
         "<input id=\"voteButton\" type=\"button\" value=\"Vote\" onclick=\"vote(docid.value, vslider.value);\" />" +
         "</form>"
       forumsout.innerHTML += "<li>"+instantlink+"<br>"+infos+"<br>"+infos2+"<br>"+text+"</li><br>"+votepanel+"<br>";
@@ -112,6 +112,7 @@ forumsout.innerHTML = "";
 }
 
 function vote(docid, val){
+    console.log("VOTING")
     console.log(docid);
     val=val*.1;
     console.log(val);

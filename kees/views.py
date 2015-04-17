@@ -165,7 +165,7 @@ def add_vote(request):
 	print "val=", val
 	docid =  str(i['docid'])
 	print "docid=", docid
-	return dblayer.voteProposal(session, docid, .9)
+	return dblayer.voteProposal(session, docid, val)
 
 @view_config(route_name='add_point', renderer='json')
 def add_point(request):

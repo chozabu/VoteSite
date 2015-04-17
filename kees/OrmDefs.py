@@ -46,6 +46,8 @@ class PostPostLink(Base):
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
+    votenum = Column(Integer)
+    rating = Column(Float)
     created = Column(DateTime, default=func.now())
     name = Column(String)
     connections = relationship(
@@ -74,6 +76,7 @@ class Post(Base):
             print "--",c.name
         for ci in self.back_connectionItems:
             print ci.post_from.name, ci.type, ci.post_to.name
+	    print "votenum: ", self.votenum, "  rating: ", self.rating
         print "----------\n"
 class VotePost(Base):
     __tablename__ = 'vote'
