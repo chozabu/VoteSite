@@ -30,31 +30,42 @@ sessions = {}
 
 #v = VotePost(author=chozabu, post=testpoint,value=.5)
 
-def jsonisify(input):
-	rs =  [x.__dict__ for x in input]
-	for x in rs:
-		for k,i in x.iteritems():
-			print "obj: ",i, " key ",k
-			if hasattr(i, 'isoformat'):
-				print "DATE"
-				x[k]=i.isoformat()
-		try:
-			del x['_sa_instance_state']
-			#del x['created']
-		except:
-			pass
+def jsonify(input):
+	return [jsonisify_one(x) for x in input]
 
-	return rs
+def jsonify_one(input):
+	x=dict(input.__dict__)
+	for k,i in x.iteritems():
+		#print "obj: ",i, " key ",k
+		if hasattr(i, 'isoformat'):
+			#print "DATE"
+			x[k]=i.isoformat()
+	try:
+		del x['_sa_instance_state']
+		#del x['created']
+	except:
+		pass
+
+	return x
 
 
 def listProposals():
 	#s=session()
 	sqp = s.query(Post).all()
-	return jsonisify(sqp)
+	result = []
+	for x in sqp:
+		new=jsonify_one(x)
+		print new
+		new['author']=x.author.name
+		result.append(new)
+	return result
 
 def viewProposal(prop_id):
 	sqp = s.query(Post).filter(Post.id==prop_id).all()
-	return jsonisify(sqp)
+	x=sqp[0]
+	new=jsonify_one(sqp[0])
+	new['author']=x.author.name
+	return new
 
 def createProposal(sid, PropText):
 	#s=session()
