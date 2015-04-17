@@ -96,22 +96,30 @@ function handleConns(forums) {
     console.log(forums)
     var fdata = JSON.parse(forums)
       forumsout.innerHTML += "<br><br>FROM<br>";
-    handlecList(fdata['from'])
+    handlecList(fdata['from'], reverse=1)
       forumsout.innerHTML += "<br><br>TO<br>";
-    handlecList(fdata['to'])
+    handlecList(fdata['to'], reverse=0)
 }
-function handlecList(fdata) {
-    console.log(fdata)
+function handlecList(fdata, reverse) {
+    console.log("FDATA");
+    console.log(fdata);
+    var a = "this";
+    var b = "this";
   for (fkey in fdata){
     f = fdata[fkey];
     data= f['data']
         console.log();
         console.log(f);
+      if (reverse)
+      b = '<a href="showpoint.html?id='+data['id']+'">'+data['name']+'</a>';
+      else
+      a = '<a href="showpoint.html?id='+data['id']+'">'+data['name']+'</a>';
       forumsout.innerHTML += "<br>";
+      forumsout.innerHTML += a;
+      forumsout.innerHTML += " ";
       forumsout.innerHTML += f['type'];
       forumsout.innerHTML += " ";
-      var instantlink = '<a href="showpoint.html?id='+data['id']+'">'+data['name']+'</a>';
-      forumsout.innerHTML += instantlink;
+      forumsout.innerHTML += b;
     }
 }
 function handleTags(forums) {

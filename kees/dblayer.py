@@ -34,7 +34,9 @@ def jsonify_list(input):
 	return [jsonify(x) for x in input]
 
 def jsonify(input):
+	#print "in ",input
 	x=dict(input.__dict__)
+	#print "x ",x
 	for k,i in x.iteritems():
 		#print "obj: ",i, " key ",k
 		if hasattr(i, 'isoformat'):
@@ -57,8 +59,9 @@ def jsonify(input):
 	return x
 
 def jsonify_proposal(x):
+		#print "prop ref: ", x.__dict__
 		new=jsonify(x)
-		print new
+		#print "json proposal: ", new
 		new['author']=x.author.name
 		try:
 			del new['connectionItems']
@@ -68,8 +71,6 @@ def jsonify_proposal(x):
 			del new['back_connectionItems']
 		except:
 			pass
-		for i in new:
-			print i
 		return new
 
 
@@ -101,19 +102,23 @@ def getConnections(prop_id):
 		nitem = jsonify(item)
 		nitem['data']=jsonify_proposal(item.post_from)
 		c_to.append(nitem)
-		c_to.append(jsonify(item))
+	#print "Connection DATA: ", c
 	return {"from":c_from,"to":c_to}
 
 def createProposal(sid, PropText):
+	print "creating prop, ", PropText
 	#s=session()
 	ses = getsession(sid)
 	if not ses:
 		return False
 	author = authorFromSes(ses)
-	print author, PropText
+	#print "author: ", author.name
 	testpoint = Post(author=author, name=PropText, votenum=0, rating=.0)
+	#print "pointname", testpoint.name
 	s.add(testpoint)
 	s.commit()
+	point = s.query(Post).get(testpoint.id)
+	return jsonify_proposal(point)
 	
 def voteProposal(sid, prop_id, value):
 	#s=session()
