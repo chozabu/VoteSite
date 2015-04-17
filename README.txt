@@ -17,7 +17,39 @@ Higher ranked points will be to the left.
 This should quickly give an impression of a points popularity, and accuracy  
   
 To test: 
-python runit.py  
+python runit.py
+
+API Refrence:
+
+{'new_user', {username:'something', password;'pass'}},
+returns
+{"result":"OK", "message":"account " + username + " created"}
+
+{'login', {username:'something', password;'pass'}},
+returns
+ {"result":"OK", "session":msession['_id'], "message":"logged in", "username":username, "_id":username}
+sessionID=session
+
+
+
+
+
+{'get_points', {}},
+returns all points
+
+
+{'get_point', {docid;'somedocid'}},
+returns a point in detail
+
+
+{'add_point', {session: sessionID, text:text.value}}
+
+{'join_points', {a: 'somedocid', b: 'somedocid', type:'connectiontype'}}
+
+
+{'add_vote', {session: sessionID, val:0.0-1.0, docid;'somedocid'}},
+
+
   
 Depends:  
 sudo pip install paste  
