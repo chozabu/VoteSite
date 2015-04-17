@@ -75,7 +75,6 @@ def jsonify_proposal(x):
 
 
 def listProposals():
-	#s=session()
 	sqp = s.query(Post).all()
 	result = []
 	for x in sqp:
@@ -83,8 +82,7 @@ def listProposals():
 	return result
 
 def viewProposal(prop_id):
-	sqp = s.query(Post).filter(Post.id==prop_id).all()
-	x=sqp[0]
+	x= s.query(Post).get(prop_id)
 	return jsonify_proposal(x)
 
 def getConnections(prop_id):
