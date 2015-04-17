@@ -48,17 +48,9 @@ var tvslider = document.getElementById("tvslider");
 var sessionID = "";
 var urlvars = getUrlVars()
 
-/*var chatout = document.getElementById("chatout");
-var chatheader = document.getElementById("chatheader");
-var gForumID = getUrlVars()["forumID"];
-var gMsgID = getUrlVars()["msgID"];
-var onlymouseover = "false";//getUrlVars()["onlymouseover"];
-var gThreadList = [];
 
-var serverURL = 'http://www.kiventedserve.chozabu.net';*/
 var serverURL = '';
 
-//forumsout.innerHTML += "ho";
 
 function getUrlVars() {
   var vars = {};
@@ -92,7 +84,7 @@ updateListFromUI()
 function updateListFromUI(){
 	//		params = {"cursor":self.cursor, "limit":self.pagesize,"sortKey": self.sortSpinner.text}
 	//		if self.reverseButton.state == 'down':params['reverse']=True
-	var params = {"id": urlvars['ID']}
+	var params = {"docid": urlvars['id']}
     console.log(serverURL+'/get_point')
     console.log(params)
 	$.post(serverURL+'/get_point', params, handleForums);
@@ -115,10 +107,16 @@ function handleTags(forums) {
     }
 }
 function handleForums(forums){
+console.log("raw data")
 console.log(forums)
 var fdata = JSON.parse(forums)
 //fdata = fdata.data;
+console.log("json data")
 console.log(fdata)
+  for (fkey in fdata){
+    console.log(fdata[fkey]);
+    }
+console.log("END json data")
 forumsout.innerHTML = "";
 //forumsout.innerHTML += "hi";
 //forumsout.innerHTML += forums;
@@ -128,27 +126,22 @@ forumsout.innerHTML = "";
     f = fdata;
     console.log(f);
     if (1){
-      //var instantlink = '<a href="#?forumID='+f['filename']+'" onclick="loadForum(\''+f['filename']+'\');">'+f['name']+'</a>';
-      var instantlink = f['name'];
-      //var image = '<img src="../thumbs/'+f['filename']+'.png" />';
-      var infos = 'Created by: '+f['author']+' @ '+f['dateAdded']
+      var instantlink = '<a href="showpoint.html?id='+f['id']+'">'+f['name']+'</a>';
+      var infos = 'Created by: '+f['author']+' @ '+f['created']
       var infos2 = f['rating']+' rating. last change: '+f['dateModified']
       var text = f['text'];
-      var votepanel =  "<form action=\"\">" + 
-        //"name: <input type=\"text\" name=\"username\" id=\"username\" value=\"Guest\">" +
-        //"pass: <input type=\"text\" name=\"password\" id=\"password\" value=\"nopassword\">" +
+      var votepanel =  "<form action=\"\">" +
         "<input id=\"vslider\" type=\"range\" name=\"points\" min=\"0\" max=\"10\">" +
-        "<input id=\"docid\" type=\"hidden\" name=\"docid\" value=\""+f['uid']+"\">" +
+        "<input id=\"docid\" type=\"hidden\" name=\"docid\" value=\""+f['id']+"\">" +
         "<input id=\"voteButton\" type=\"button\" value=\"Vote\" onclick=\"vote(docid.value, vslider.value);\" />" +
         "</form>"
-      //var instantlink = f['name'];
       forumsout.innerHTML += "<li>"+instantlink+"<br>"+infos+"<br>"+infos2+"<br>"+text+"</li><br>"+votepanel+"<br>";
 
-      forumsout.innerHTML += "Tags:<br>";
-        var params = {"id": urlvars['ID']}
-        console.log(serverURL+'/get_tags')
-        console.log(params)
-        $.post(serverURL+'/get_tags', params, handleTags);
+      //forumsout.innerHTML += "Tags:<br>";
+       // var params = {"id": urlvars['ID']}
+        //console.log(serverURL+'/get_tags')
+        //console.log(params)
+        //$.post(serverURL+'/get_tags', params, handleTags);
       //forumIDNameDict[f['filename']] = f['name'];
     }
   }

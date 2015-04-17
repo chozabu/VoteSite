@@ -92,7 +92,7 @@ def login(request):
 
 @view_config(route_name='get_points', renderer='json')
 def get_points(request):
-	print "points"
+	print "get_points"
 	#i = request.POST
 	#sortKey =  str(i['sortKey'])
 	#cursor =  int(i['cursor'])
@@ -103,13 +103,14 @@ def get_points(request):
 	return points
 @view_config(route_name='get_point', renderer='json')
 def get_point(request):
-	print "points"
+	i = request.POST
 	#i = request.POST
 	docid = str(i['docid'])
+	print "docid=",docid
 	#cursor =  int(i['cursor'])
 	#limit =  int(i['limit'])
 	#print "querying", sortKey,cursor,limit
-	points =dblayer.listProposals()
+	points =dblayer.viewProposal(docid)
 	print "returning, ", points
 	return points
 @view_config(route_name='join_points', renderer='json')
