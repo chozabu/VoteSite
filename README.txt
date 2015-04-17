@@ -44,7 +44,7 @@ returns a point in detail
 
 {'add_point', {session: sessionID, text:text.value}}
 
-{'join_points', {a: 'somedocid', b: 'somedocid', type:'connectiontype'}}
+{'join_points', {session: sessionID, a: 'somedocid', b: 'somedocid', type:'connectiontype'}}
 
 
 {'add_vote', {session: sessionID, val:0.0-1.0, docid;'somedocid'}},
