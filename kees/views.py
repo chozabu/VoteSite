@@ -101,6 +101,17 @@ def get_points(request):
 	points =dblayer.listProposals()
 	print "returning, ", points
 	return points
+@view_config(route_name='get_point', renderer='json')
+def get_point(request):
+	print "points"
+	#i = request.POST
+	docid = str(i['docid'])
+	#cursor =  int(i['cursor'])
+	#limit =  int(i['limit'])
+	#print "querying", sortKey,cursor,limit
+	points =dblayer.listProposals()
+	print "returning, ", points
+	return points
 @view_config(route_name='join_points', renderer='json')
 def join_points(request):
 	print "join"

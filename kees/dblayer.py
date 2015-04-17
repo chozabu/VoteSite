@@ -30,20 +30,31 @@ sessions = {}
 
 #v = VotePost(author=chozabu, post=testpoint,value=.5)
 
+def jsonisify(input):
+	rs =  [x.__dict__ for x in input]
+	for x in rs:
+		for k,i in x.iteritems():
+			print "obj: ",i, " key ",k
+			if hasattr(i, 'isoformat'):
+				print "DATE"
+				x[k]=i.isoformat()
+		try:
+			del x['_sa_instance_state']
+			#del x['created']
+		except:
+			pass
+
+	return rs
+
+
 def listProposals():
 	#s=session()
 	sqp = s.query(Post).all()
-	rs =  [x.__dict__ for x in sqp]
-	for x in rs:
-		try:
-			del x['_sa_instance_state']
-			del x['created']
-		except:
-			pass
-	return rs
+	return jsonisify(sqp)
 
 def viewProposal(prop_id):
-	return [x.__dict__ for x in s.query(Post).filter(Post.id==prop_id).all()]
+	sqp = s.query(Post).filter(Post.id==prop_id).all()
+	return jsonisify(sqp)
 
 def createProposal(sid, PropText):
 	#s=session()
@@ -52,7 +63,6 @@ def createProposal(sid, PropText):
 		return False
 	author = authorFromSes(ses)
 	print author, PropText
-	#author = ses['username']
 	testpoint = Post(author=author, name=PropText, votenum=0)
 	s.add(testpoint)
 	s.commit()
@@ -163,6 +173,7 @@ def new_user(username, password):
 	s.add(newuser)
 	s.commit()
 	print {"result":"OK", "message":"account " + username + " created"}
+	return {"result":"OK", "message":"account " + username + " created"}
 
 
 new_user("Guest", "nopassword")
