@@ -106,11 +106,20 @@ def get_point(request):
 	i = request.POST
 	#i = request.POST
 	docid = str(i['docid'])
-	print "docid=",docid
+	print "point requested, docid=",docid
 	#cursor =  int(i['cursor'])
 	#limit =  int(i['limit'])
 	#print "querying", sortKey,cursor,limit
 	points =dblayer.viewProposal(docid)
+	print "returning, ", points
+	return points
+@view_config(route_name='get_connections', renderer='json')
+def get_connections(request):
+	i = request.POST
+	#i = request.POST
+	docid = str(i['docid'])
+	print "connections requested, docid=",docid
+	points =dblayer.getConnections(docid)
 	print "returning, ", points
 	return points
 @view_config(route_name='join_points', renderer='json')

@@ -91,6 +91,26 @@ function updateListFromUI(){
 	var forumIDNameDict = {};
 }
 
+function handleConns(forums) {
+    console.log("GOT CONNECTIONS")
+    console.log(forums)
+    var fdata = JSON.parse(forums)
+    handlecList(fdata['from'])
+    handlecList(fdata['to'])
+}
+function handlecList(fdata) {
+    console.log(fdata)
+  for (fkey in fdata){
+    f = fdata[fkey];
+    data= f['data']
+        console.log();
+        console.log(f);
+      forumsout.innerHTML += "<br>";
+      forumsout.innerHTML += f['type'];
+      forumsout.innerHTML += " ";
+      forumsout.innerHTML += data['name'];
+    }
+}
 function handleTags(forums) {
     console.log("GOT TAGS")
     console.log(forums)
@@ -142,6 +162,12 @@ forumsout.innerHTML = "";
         //console.log(serverURL+'/get_tags')
         //console.log(params)
         //$.post(serverURL+'/get_tags', params, handleTags);
+      //forumIDNameDict[f['filename']] = f['name'];
+      forumsout.innerHTML += "Connections:<br>";
+       var params = {"docid": urlvars['id']}
+        console.log(serverURL+'/get_connections')
+        console.log(params)
+        $.post(serverURL+'/get_connections', params, handleConns);
       //forumIDNameDict[f['filename']] = f['name'];
     }
   }

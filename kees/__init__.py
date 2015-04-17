@@ -13,6 +13,7 @@ def main(global_config, **settings):
     config.add_route('store_mp3_view', '/store_mp3_view')
     config.add_route('get_points', '/get_points')
     config.add_route('join_points', '/join_points')
+    config.add_route('get_connections', '/get_connections')
     config.add_route('complex_query_levels', '/complex_query_levels')
     config.add_route('add_point', '/add_point')
     config.add_route('add_vote', '/add_vote')

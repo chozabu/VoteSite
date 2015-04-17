@@ -30,10 +30,10 @@ sessions = {}
 
 #v = VotePost(author=chozabu, post=testpoint,value=.5)
 
-def jsonify(input):
-	return [jsonisify_one(x) for x in input]
+def jsonify_list(input):
+	return [jsonify(x) for x in input]
 
-def jsonify_one(input):
+def jsonify(input):
 	x=dict(input.__dict__)
 	for k,i in x.iteritems():
 		#print "obj: ",i, " key ",k
@@ -45,8 +45,32 @@ def jsonify_one(input):
 		#del x['created']
 	except:
 		pass
+	try:
+		del x['post_to']
+	except:
+		pass
+	try:
+		del x['post_from']
+	except:
+		pass
 
 	return x
+
+def jsonify_proposal(x):
+		new=jsonify(x)
+		print new
+		new['author']=x.author.name
+		try:
+			del new['connectionItems']
+		except:
+			pass
+		try:
+			del new['back_connectionItems']
+		except:
+			pass
+		for i in new:
+			print i
+		return new
 
 
 def listProposals():
@@ -54,18 +78,31 @@ def listProposals():
 	sqp = s.query(Post).all()
 	result = []
 	for x in sqp:
-		new=jsonify_one(x)
-		print new
-		new['author']=x.author.name
-		result.append(new)
+		result.append(jsonify_proposal(x))
 	return result
 
 def viewProposal(prop_id):
 	sqp = s.query(Post).filter(Post.id==prop_id).all()
 	x=sqp[0]
-	new=jsonify_one(sqp[0])
-	new['author']=x.author.name
-	return new
+	return jsonify_proposal(x)
+
+def getConnections(prop_id):
+	sqp = s.query(Post).filter(Post.id==prop_id).all()
+	c_from = []
+	c_to = []
+	x=sqp[0]
+	for item in x.connectionItems:
+		#print item
+		nitem = jsonify(item)
+		nitem['data']=jsonify_proposal(item.post_to)
+		c_from.append(nitem)
+
+	for item in x.back_connectionItems:
+		nitem = jsonify(item)
+		nitem['data']=jsonify_proposal(item.post_from)
+		c_to.append(nitem)
+		c_to.append(jsonify(item))
+	return {"from":c_from,"to":c_to}
 
 def createProposal(sid, PropText):
 	#s=session()
