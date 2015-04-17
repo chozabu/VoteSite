@@ -95,7 +95,9 @@ function handleConns(forums) {
     console.log("GOT CONNECTIONS")
     console.log(forums)
     var fdata = JSON.parse(forums)
+      forumsout.innerHTML += "<br><br>FROM<br>";
     handlecList(fdata['from'])
+      forumsout.innerHTML += "<br><br>TO<br>";
     handlecList(fdata['to'])
 }
 function handlecList(fdata) {
@@ -108,7 +110,8 @@ function handlecList(fdata) {
       forumsout.innerHTML += "<br>";
       forumsout.innerHTML += f['type'];
       forumsout.innerHTML += " ";
-      forumsout.innerHTML += data['name'];
+      var instantlink = '<a href="showpoint.html?id='+data['id']+'">'+data['name']+'</a>';
+      forumsout.innerHTML += instantlink;
     }
 }
 function handleTags(forums) {
