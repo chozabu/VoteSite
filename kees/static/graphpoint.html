@@ -330,19 +330,20 @@ links.forEach(function(link) {
 nodes=newnodes;
 links=newlinks;
 
+
 console.log("***********");
 console.log(links)
 console.log(nodes)
 
 var width = 960,
-    height = 500;
+    height = 960;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
     .linkDistance(60)
-    .charge(-300)
+    .charge(-600)
     .on("tick", tick)
     .start();
 
@@ -388,6 +389,19 @@ function tick() {
   path.attr("d", linkArc);
   circle.attr("transform", transform);
   text.attr("transform", transform);
+
+/*var n = nodes.length;
+nodes.forEach(function(d, i) {
+  d.x = d.y = width / n * i;
+});*/
+
+
+var n = links.length;
+links.forEach(function(d, i) {
+  d.source.y+=0.2;
+  d.target.y-=0.2;
+});
+
 }
 
 function linkArc(d) {
