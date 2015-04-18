@@ -47,6 +47,8 @@ class AuthorAuthorRepLink(Base):
     __tablename__ = 'author_author_rep_link'
     #id = Column(Integer, primary_key=True)
     type = Column(String)
+    catagory_id = Column(Integer, ForeignKey('catagory.id'))
+    catagory = relationship(Catagory, backref=backref('posts', uselist=True))
     author_from_id = Column(ForeignKey('author.id'), primary_key=True)
     author_to_id = Column(ForeignKey('author.id'), primary_key=True)
     author_from = relationship(
@@ -110,6 +112,7 @@ class Post(Base):
     id = Column(Integer, primary_key=True)
     votenum = Column(Integer)
     catagory_id = Column(Integer, ForeignKey('catagory.id'))
+    catagory = relationship(Catagory, backref=backref('posts', uselist=True))
     rating = Column(Float)
     created = Column(DateTime, default=func.now())
     name = Column(String)
