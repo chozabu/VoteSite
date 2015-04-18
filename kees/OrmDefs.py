@@ -10,15 +10,7 @@ from sqlalchemy.orm import aliased
 
 Base = declarative_base()
 
-#Author
-#Post
-#Post-Post Connection
-#Vote (Posts, and more?)
-#votegroup?
-#VoteConnection?
-#LiquidDelegation?
-#Catagory?
-#Tag?
+
 
 class Author(Base):
     __tablename__ = 'author'
@@ -42,6 +34,40 @@ class PostPostLink(Base):
         'Post',
 		primaryjoin='PostPostLink.post_to_id==Post.id',
 		backref=backref("back_connectionItems")
+    )
+
+class GroupMembershipLink(Base):
+    __tablename__ = 'group_membership_link'
+    #id = Column(Integer, primary_key=True)
+    type = Column(String)
+    author_id = Column(ForeignKey('author.id'), primary_key=True)
+    group_id = Column(ForeignKey('group.id'), primary_key=True)
+    author = relationship(
+        'Author',
+		primaryjoin='GroupMembershipLink.author_id==Author.id',
+		backref=backref("group_memberships")
+    )
+    group = relationship(
+        'Group',
+		primaryjoin='GroupMembershipLink.group_id==Group.id',
+		backref=backref("memberships")
+    )
+
+class CatagoryMembershipLink(Base):
+    __tablename__ = 'catagory_membership_link'
+    #id = Column(Integer, primary_key=True)
+    type = Column(String)
+    author_id = Column(ForeignKey('author.id'), primary_key=True)
+    catagory_id = Column(ForeignKey('catagory.id'), primary_key=True)
+    author = relationship(
+        'Author',
+		primaryjoin='CatagoryMembershipLink.author_id==Author.id',
+		backref=backref("catagory_memberships")
+    )
+    catagory = relationship(
+        'Catagory',
+		primaryjoin='CatagoryMembershipLink.catagory_id==Catagory.id',
+		backref=backref("memberships")
     )
 class AuthorAuthorRepLink(Base):
     __tablename__ = 'author_author_rep_link'
@@ -83,10 +109,10 @@ class Catagory(Base):
     rating = Column(Float)
 
     author_id = Column(Integer, ForeignKey('author.id'))
-    author = relationship(Author, backref=backref('catagorys', uselist=True))
+    author = relationship(Author, backref=backref('catagorys_created', uselist=True))
 
     created = Column(DateTime, default=func.now())
-    text = Column(String)
+    name = Column(String)
 
     #posts = relationship("Post", backref="catagory")
     
@@ -110,10 +136,10 @@ class Tag(Base):
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
-    votenum = Column(Integer)
+    votenum = Column(Integer, default=0)
+    rating = Column(Float, default=0)
     catagory_id = Column(Integer, ForeignKey('catagory.id'))
     catagory = relationship(Catagory, backref=backref('posts', uselist=True))
-    rating = Column(Float)
     created = Column(DateTime, default=func.now())
     name = Column(String)
     connections = relationship(
@@ -165,3 +191,23 @@ class VoteTag(Base):
     tag_id = Column(Integer, ForeignKey('tag.id'))
     tag = relationship(Tag, backref=backref('votes', uselist=True))
 
+
+class Group(Base):
+    __tablename__ = 'group'
+    id = Column(Integer, primary_key=True)
+    votenum = Column(Integer)
+    rating = Column(Float)
+
+    author_id = Column(Integer, ForeignKey('author.id'))
+    author = relationship(Author, backref=backref('groups_created', uselist=True))
+
+    created = Column(DateTime, default=func.now())
+    name = Column(String)
+
+    #posts = relationship("Post", backref="group")
+    
+    
+    parent_id = Column(Integer, ForeignKey('group.id'))
+    children = relationship("Group",
+                backref=backref('parent', remote_side=[id])
+                )

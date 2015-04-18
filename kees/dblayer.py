@@ -146,6 +146,34 @@ def createProposal(sid, PropText):
 	s.commit()
 	point = s.query(Post).get(testpoint.id)
 	return jsonify_proposal(point)
+def createCatagory(sid, name, parent=None):
+	print "creating cat, ", name
+	#s=session()
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	#print "author: ", author.name
+	cat = Catagory(author=author, name=name)
+	#print "pointname", testpoint.name
+	s.add(cat)
+	s.commit()
+	point = s.query(Catagory).get(cat.id)
+	return jsonify(point)
+def createGroup(sid, name, parent=None):
+	print "creating group, ", name
+	#s=session()
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	#print "author: ", author.name
+	group = Group(author=author, name=name)
+	#print "pointname", testpoint.name
+	s.add(group)
+	s.commit()
+	point = s.query(Group).get(group.id)
+	return jsonify(point)
 	
 def voteProposal(sid, prop_id, value):
 	#s=session()
@@ -199,25 +227,45 @@ def joinProposal(sid, prop_id, prop_id2, cType):
 	ses = getsession(sid)
 	if not ses:
 		return False
-	author = authorFromSes(ses)
+	#author = authorFromSes(ses)
 	point = s.query(Post).get(prop_id)
 	point2 = s.query(Post).get(prop_id2)
 	c = PostPostLink(post_from=point,post_to=point2,type=cType)
 	s.add(c)
 	s.commit()
-	#return [c.post_from, c.post_to,c.type]
-def setRep(sid, from_id, to_id, cType):
+	return [c.post_from_id, c.post_to_id,c.type]
+def setRep(sid, from_id, to_id, cat):
+	ses = getsession(sid)
+	if not ses:
+		return False
+	#author = authorFromSes(ses)
+	afrom = s.query(Author).get(from_id)
+	#check author == afrom !!!
+	ato = s.query(Author).get(to_id)
+	c = AuthorAuthorRepLink(author_from=afrom,author_to=ato,catagory_id=cat)
+	s.add(c)
+	s.commit()
+	return [c.author_from_id, c.author_to_id,c.catagory_id]
+def joinGroup(sid, group_id):
 	ses = getsession(sid)
 	if not ses:
 		return False
 	author = authorFromSes(ses)
-	afrom = s.query(Author).get(from_id)
-	#check author == afrom !!!
-	ato = s.query(Author).get(to_id)
-	c = AuthorAuthorRepLink(author_from=afrom,author_to=ato,type=cType)
+	group = s.query(Group).get(group_id)
+	c = GroupMembershipLink(author=author,group=group)
 	s.add(c)
 	s.commit()
-	return [c.author_from_id, c.author_to_id,c.type]
+	return [c.author_id, c.group_id]
+def joinCatagory(sid, catagory_id):
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	catagory = s.query(Catagory).get(catagory_id)
+	c = CatagoryMembershipLink(author=author,catagory=catagory)
+	s.add(c)
+	s.commit()
+	return [c.author_id, c.catagory_id]
 def createComment(sid, prop_id, text, parent_id=None):
 	ses = getsession(sid)
 	if not ses:

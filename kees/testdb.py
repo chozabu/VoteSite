@@ -102,6 +102,21 @@ a123 = dblayer.getAuthorID("123")
 aasd = dblayer.getAuthorID("asd")
 
 
+print "\n new catagory"
+cat = dblayer.createCatagory(sid, "testcat1")
+print "cat=",cat
+
+
+print "\n new group"
+group = dblayer.createGroup(sid, "testGroup1")
+print "group=",group
+
+print "\n join cat"
+print dblayer.joinCatagory(sid, cat['id'])
+
+print "\n join group"
+print dblayer.joinGroup(sid, cat['id'])
+
 print "\n set Rep"
-print dblayer.setRep(sid, a123, aasd, "catagory")
+print dblayer.setRep(sid, a123, aasd, cat['id'])
 
