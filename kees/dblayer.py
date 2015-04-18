@@ -91,7 +91,7 @@ def getAllConnections_id(prop_id, clist={}):
 	return {"nodes":nodes,"connections":[c for c in connections.values()]}
 	#return [item for item in getAllConnections(x).iterkeys()]
 def getAllConnections(prop, clist={}, plist={}):
-	clist[prop.id]=prop.name
+	clist[prop.id]={"name": prop.name, "rating": prop.rating}
 	for c in prop.connectionItems:
 		if c not in plist:
 			plist[c]={"type":c.type,"from":c.post_from_id,"to":c.post_to_id}

@@ -275,10 +275,10 @@ var newlinks = conndata['connections'];
 var newnodes = conndata['nodes'];
 
 
-for (fkey in newnodes){
-f = newnodes[fkey];
-newnodes[fkey] = {"name":f};
-}
+//for (fkey in newnodes){
+//f = newnodes[fkey];
+//newnodes[fkey] = {"name":f};
+//}
 for (fkey in newlinks){
 f = newlinks[fkey];
 f.source = newnodes[f.from];
@@ -390,13 +390,12 @@ function tick() {
   circle.attr("transform", transform);
   text.attr("transform", transform);
 
-/*var n = nodes.length;
-nodes.forEach(function(d, i) {
-  d.x = d.y = width / n * i;
-});*/
 
+for (n in nodes){
+d = nodes[n];
+  d.x-=(d.rating-.5)*.5;
+}
 
-var n = links.length;
 links.forEach(function(d, i) {
   d.source.y+=0.2;
   d.target.y-=0.2;
