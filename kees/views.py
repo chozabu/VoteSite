@@ -81,16 +81,6 @@ def login(request):
 	password =  i['password']
 	return dblayer.login(username,password)
 
-
-
-	i = request.POST
-	sortKey =  str(i['sortKey'])
-	cursor =  int(i['cursor'])
-	limit =  int(i['limit'])
-	levels = dblayer.query_levels(sortKey,cursor,limit)
-	#return Response("OK")
-	return levels
-
 @view_config(route_name='get_points', renderer='json')
 def get_points(request):
 	print "get_points"
@@ -142,49 +132,6 @@ def join_points(request):
 	session =  i['session']
 	#print "querying", sortKey,cursor,limit
 	return dblayer.joinProposal(session, a,b,cType)
-
-'''@view_config(route_name='query_points', renderer='json')
-def query_points(request):
-	print "points"
-	i = request.POST
-	sortKey =  str(i['sortKey'])
-	cursor =  int(i['cursor'])
-	limit =  int(i['limit'])
-	print "querying", sortKey,cursor,limit
-	points = dblayer.query_points(sortKey,cursor,limit)
-	print "returning, ", points
-	return points
-
-	print "TAGS"
-	i = request.POST
-	print i
-	docid =  i['id']
-	print "requesting: ", docid
-	tags = dblayer.get_tags(docid)
-	print tags
-	return tags'''
-
-'''@view_config(route_name='get_point', renderer='json')
-def get_point(request):
-	print "HELLO"
-	i = request.POST
-	print i
-	docid =  i['id']
-	dbid =  'points'#i['dbid']
-	print "docid=",docid
-	point = dblayer.get_one(dbid, uid=docid)
-	print point
-	return point
-
-	print "HELLO"
-	i = request.POST
-	print i
-	docid =  i['id']
-	dbid =  'pplevels'#i['dbid']
-	print "docid=",docid
-	point = dblayer.get_one(dbid, uid=docid)
-	print point
-	return point'''
 
 @view_config(route_name='add_vote', renderer='json')
 def add_vote(request):
