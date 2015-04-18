@@ -176,6 +176,22 @@ def voteComment(sid, prop_id, value):
 	print "new average:, ", q, " old average: ", comment.rating
 	comment.rating=q[0]
 	s.commit()
+def voteTag(sid, prop_id, value):
+	#s=session()
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	tag = s.query(Tag).get(prop_id)
+	print "new vote of: ", value, " on ", tag.text[0:10], " by ", author.name
+	v = VoteTag(author=author, tag=tag,value=value)
+	s.add(v)
+	s.commit()
+	tag.votenum+=1
+	q= s.query(func.avg(VoteTag.value).label('average')).filter(VoteTag.tag_id==tag.id).one()
+	print "new average:, ", q, " old average: ", tag.rating
+	tag.rating=q[0]
+	s.commit()
 def joinProposal(sid, prop_id, prop_id2, cType):
 	ses = getsession(sid)
 	if not ses:
@@ -191,8 +207,18 @@ def createComment(sid, prop_id, text, parent_id=None):
 	if not ses:
 		return False
 	author = authorFromSes(ses)
-	point = s.query(Post).get(prop_id)
+	#point = s.query(Post).get(prop_id)
 	c = Comment(post_id=prop_id, text=text, author=author, parent_id=parent_id, rating=0, votenum=0)
+	s.add(c)
+	s.commit()
+	return c.id
+def createTag(sid, prop_id, text):
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	#point = s.query(Post).get(prop_id)
+	c = Tag(post_id=prop_id, text=text, author=author, rating=0, votenum=0)
 	s.add(c)
 	s.commit()
 	return c.id

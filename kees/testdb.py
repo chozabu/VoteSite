@@ -86,3 +86,12 @@ print comment3
 print "\n vote comment"
 dblayer.voteComment(sid, comment1, .9)
 
+print "\n tag"
+tag1 = dblayer.createTag(sid, p1['id'], "Tag One")
+print tag1
+tag2 = dblayer.createTag(sid, p1['id'], "Tag Two")
+print tag2
+
+print "\n vote tag"
+dblayer.voteTag(sid, tag1, .9)
+
