@@ -380,6 +380,7 @@ function tick() {
 for (n in nodes){
 d = nodes[n];
   d.x+=d.force;//(d.rating-.5)*.5;
+  //d.x=d.rating*500;
 }
 
 links.forEach(function(d, i) {
