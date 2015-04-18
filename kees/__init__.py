@@ -1,5 +1,33 @@
 from pyramid.config import Configurator
 
+from pyramid.request import Request
+from pyramid.request import Response
+
+'''def request_factory(environ):
+    request = Request(environ)
+    if request.is_xhr:
+        request.response = Response()
+        request.response.headerlist = []
+        request.response.headerlist.extend(
+            (
+                ('Access-Control-Allow-Origin', '*'),
+                ('Content-Type', 'application/json')
+            )
+        )
+    return request'''
+
+def add_cors_headers_response_callback(event):
+    def cors_headers(request, response):
+        response.headers.update({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST,GET,DELETE,PUT,OPTIONS',
+        'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Max-Age': '1728000',
+        })
+    event.request.add_response_callback(cors_headers)
+
+from pyramid.events import NewRequest
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -27,4 +55,6 @@ def main(global_config, **settings):
     config.add_route('uploadCrash', '/uploadCrash')
     config.add_route('crashLogs', '/crashLogs')
     config.scan()
+    #config.set_request_factory(request_factory)
+    config.add_subscriber(add_cors_headers_response_callback, NewRequest)
     return config.make_wsgi_app()
