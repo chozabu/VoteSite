@@ -173,6 +173,16 @@ def joinProposal(sid, prop_id, prop_id2, cType):
 	c = PostPostLink(post_from=point,post_to=point2,type=cType)
 	s.add(c)
 	s.commit()
+def createComment(sid, prop_id, text, parent_id=None):
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	point = s.query(Post).get(prop_id)
+	c = Comment(post_id=prop_id, text=text, author=author, parent_id=parent_id)
+	s.add(c)
+	s.commit()
+	return c.id
 def getsession(session):
 	if sessions.has_key(session) == False:
 		return False

@@ -8,23 +8,23 @@ print dblayer.new_user("123", "456")
 
 print "\n login user"
 loginfo = dblayer.login("123", "456")
-
+sid = loginfo['session']
 print "\n create prop"
-p1 = dblayer.createProposal(loginfo['session'], "Improve this system")
+p1 = dblayer.createProposal(sid, "Improve this system")
 
 #p1
-p2 = dblayer.createProposal(loginfo['session'], "Make GUI Nice")
-p3 = dblayer.createProposal(loginfo['session'], "Make Search function")
-p4 = dblayer.createProposal(loginfo['session'], "Make Connection OverView")
-p1d = dblayer.createProposal(loginfo['session'], "Make this system Distrubited")
+p2 = dblayer.createProposal(sid, "Make GUI Nice")
+p3 = dblayer.createProposal(sid, "Make Search function")
+p4 = dblayer.createProposal(sid, "Make Connection OverView")
+p1d = dblayer.createProposal(sid, "Make this system Distrubited")
 
 #p2
-p5 = dblayer.createProposal(loginfo['session'], "Re-write FrontEnd")
+p5 = dblayer.createProposal(sid, "Re-write FrontEnd")
 
 #p3
-p6 = dblayer.createProposal(loginfo['session'], "Add good Query API")
+p6 = dblayer.createProposal(sid, "Add good Query API")
 #p4
-p7 = dblayer.createProposal(loginfo['session'], "Add API method with output close to d3")
+p7 = dblayer.createProposal(sid, "Add API method with output close to d3")
 
 print "\n list props"
 print dblayer.listProposals()
@@ -34,27 +34,27 @@ p1 = props[0]
 p2 = props[1]
 
 print "\n connect prop"
-dblayer.joinProposal(loginfo['session'], p2['id'], p1['id'], "leadsto")
-dblayer.joinProposal(loginfo['session'], p3['id'], p1['id'], "leadsto")
-dblayer.joinProposal(loginfo['session'], p4['id'], p1['id'], "leadsto")
-dblayer.joinProposal(loginfo['session'], p1d['id'], p1['id'], "leadsto")
+dblayer.joinProposal(sid, p2['id'], p1['id'], "leadsto")
+dblayer.joinProposal(sid, p3['id'], p1['id'], "leadsto")
+dblayer.joinProposal(sid, p4['id'], p1['id'], "leadsto")
+dblayer.joinProposal(sid, p1d['id'], p1['id'], "leadsto")
 
-dblayer.joinProposal(loginfo['session'], p5['id'], p2['id'], "leadsto")
+dblayer.joinProposal(sid, p5['id'], p2['id'], "leadsto")
 
-dblayer.joinProposal(loginfo['session'], p6['id'], p3['id'], "leadsto")
+dblayer.joinProposal(sid, p6['id'], p3['id'], "leadsto")
 
-dblayer.joinProposal(loginfo['session'], p7['id'], p4['id'], "leadsto")
+dblayer.joinProposal(sid, p7['id'], p4['id'], "leadsto")
 
 print "\n vote prop"
-dblayer.voteProposal(loginfo['session'], p1['id'], .9)
-dblayer.voteProposal(loginfo['session'], p1['id'], .5)
-dblayer.voteProposal(loginfo['session'], p2['id'], .1)
-dblayer.voteProposal(loginfo['session'], p3['id'], .2)
-dblayer.voteProposal(loginfo['session'], p4['id'], .99)
-dblayer.voteProposal(loginfo['session'], p5['id'], .01)
-dblayer.voteProposal(loginfo['session'], p6['id'], .23)
-dblayer.voteProposal(loginfo['session'], p7['id'], .76)
-dblayer.voteProposal(loginfo['session'], p1d['id'], .23)
+dblayer.voteProposal(sid, p1['id'], .9)
+dblayer.voteProposal(sid, p1['id'], .5)
+dblayer.voteProposal(sid, p2['id'], .1)
+dblayer.voteProposal(sid, p3['id'], .2)
+dblayer.voteProposal(sid, p4['id'], .99)
+dblayer.voteProposal(sid, p5['id'], .01)
+dblayer.voteProposal(sid, p6['id'], .23)
+dblayer.voteProposal(sid, p7['id'], .76)
+dblayer.voteProposal(sid, p1d['id'], .23)
 
 
 print "\n list props"
@@ -74,3 +74,11 @@ for p in sortedprops:
 	print ""
 	print p['rating'], p['name']
 #print dblayer.getConnections(p2['id'])
+
+print "\n comment"
+comment1 = dblayer.createComment(sid, p1['id'], "Comment One")
+print comment1
+comment2 = dblayer.createComment(sid, p1['id'], "Comment Two")
+print comment2
+comment3 = dblayer.createComment(sid, p1['id'], "Comment ONE-REPLY", comment1)
+print comment3

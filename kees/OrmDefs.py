@@ -43,6 +43,22 @@ class PostPostLink(Base):
 		primaryjoin='PostPostLink.post_to_id==Post.id',
 		backref=backref("back_connectionItems")
     )
+class Comment(Base):
+    __tablename__ = 'comment'
+    id = Column(Integer, primary_key=True)
+    votenum = Column(Integer)
+    rating = Column(Float)
+    author_id = Column(Integer, ForeignKey('author.id'))
+    author = relationship(Author, backref=backref('comments', uselist=True))
+    created = Column(DateTime, default=func.now())
+    text = Column(String)
+    post_id = Column(Integer, ForeignKey('post.id'))
+    post = relationship("Post", backref=backref('comments', uselist=True))
+    parent_id = Column(Integer, ForeignKey('comment.id'))
+    children = relationship("Comment",
+                backref=backref('parent', remote_side=[id])
+            )
+
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
@@ -57,13 +73,6 @@ class Post(Base):
 		secondaryjoin=PostPostLink.post_to_id==id,
 		backref=backref("back_connections")
     )
-    '''connectionItems = relationship(
-        'PostPostLink',
-        secondary="post_post_link",
-		primaryjoin=PostPostLink.post_from_id==id,
-		secondaryjoin=PostPostLink.post_to_id==id,
-		backref=backref("back_connectionItems")
-    )'''
     author_id = Column(Integer, ForeignKey('author.id'))
     author = relationship(Author, backref=backref('posts', uselist=True))
     def getconnections(self):
