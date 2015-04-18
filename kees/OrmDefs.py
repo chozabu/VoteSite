@@ -48,6 +48,7 @@ class AuthorAuthorRepLink(Base):
     #id = Column(Integer, primary_key=True)
     type = Column(String)
     catagory_id = Column(Integer, ForeignKey('catagory.id'))
+    catagory = relationship('Catagory', backref=backref('reps', uselist=True))
     author_from_id = Column(ForeignKey('author.id'), primary_key=True)
     author_to_id = Column(ForeignKey('author.id'), primary_key=True)
     author_from = relationship(
@@ -87,7 +88,7 @@ class Catagory(Base):
     created = Column(DateTime, default=func.now())
     text = Column(String)
 
-    posts = relationship("Post", backref="catagory")
+    #posts = relationship("Post", backref="catagory")
     
     
     parent_id = Column(Integer, ForeignKey('catagory.id'))
