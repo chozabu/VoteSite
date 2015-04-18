@@ -122,6 +122,15 @@ def get_connections(request):
 	points =dblayer.getConnections(docid)
 	print "returning, ", points
 	return points
+@view_config(route_name='get_all_connections', renderer='json')
+def get_all_connections(request):
+	i = request.POST
+	#i = request.POST
+	docid = str(i['docid'])
+	print "all connections requested, docid=",docid
+	points =dblayer.getAllConnections_id(docid)
+	print "returning, ", points
+	return points
 @view_config(route_name='join_points', renderer='json')
 def join_points(request):
 	print "join"

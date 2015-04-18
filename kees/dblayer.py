@@ -85,11 +85,29 @@ def viewProposal(prop_id):
 	x= s.query(Post).get(prop_id)
 	return jsonify_proposal(x)
 
+def getAllConnections_id(prop_id, clist={}):
+	x= s.query(Post).get(prop_id)
+	nodes, connections = getAllConnections(x)
+	return {"nodes":nodes,"connections":[c for c in connections.values()]}
+	#return [item for item in getAllConnections(x).iterkeys()]
+def getAllConnections(prop, clist={}, plist={}):
+	clist[prop.id]=prop.name
+	for c in prop.connectionItems:
+		if c not in plist:
+			plist[c]={"type":c.type,"from":c.post_from_id,"to":c.post_to_id}
+		if c.post_to.id not in clist:
+			getAllConnections(c.post_to, clist,plist)
+	for c in prop.back_connectionItems:
+		if c not in plist:
+			plist[c]={"type":c.type,"from":c.post_from_id,"to":c.post_to_id}
+		if c.post_from.id not in clist:
+			getAllConnections(c.post_from, clist,plist)
+	return clist, plist
+
 def getConnections(prop_id):
-	sqp = s.query(Post).filter(Post.id==prop_id).all()
 	c_from = []
 	c_to = []
-	x=sqp[0]
+	x= s.query(Post).get(prop_id)
 	for item in x.connectionItems:
 		#print item
 		nitem = jsonify(item)
