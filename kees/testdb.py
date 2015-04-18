@@ -2,6 +2,7 @@ import dblayer
 
 print "\n new user"
 print dblayer.new_user("123", "456")
+print dblayer.new_user("asd", "qwe")
 
 print "\n new user"
 print dblayer.new_user("123", "456")
@@ -94,4 +95,13 @@ print tag2
 
 print "\n vote tag"
 dblayer.voteTag(sid, tag1, .9)
+
+
+print "\n get author ID"
+a123 = dblayer.getAuthorID("123")
+aasd = dblayer.getAuthorID("asd")
+
+
+print "\n set Rep"
+print dblayer.setRep(sid, a123, aasd, "catagory")
 

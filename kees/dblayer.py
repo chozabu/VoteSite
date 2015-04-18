@@ -92,6 +92,9 @@ def listProposals():
 def viewProposal(prop_id):
 	x= s.query(Post).get(prop_id)
 	return jsonify_proposal(x)
+def getAuthorID(author_name):
+	result = s.query(Author).filter(Author.name == author_name).all()
+	return result[0].id
 
 def getAllConnections_id(prop_id, clist={}):
 	x= s.query(Post).get(prop_id)
@@ -202,6 +205,19 @@ def joinProposal(sid, prop_id, prop_id2, cType):
 	c = PostPostLink(post_from=point,post_to=point2,type=cType)
 	s.add(c)
 	s.commit()
+	#return [c.post_from, c.post_to,c.type]
+def setRep(sid, from_id, to_id, cType):
+	ses = getsession(sid)
+	if not ses:
+		return False
+	author = authorFromSes(ses)
+	afrom = s.query(Author).get(from_id)
+	#check author == afrom !!!
+	ato = s.query(Author).get(to_id)
+	c = AuthorAuthorRepLink(author_from=afrom,author_to=ato,type=cType)
+	s.add(c)
+	s.commit()
+	return [c.author_from_id, c.author_to_id,c.type]
 def createComment(sid, prop_id, text, parent_id=None):
 	ses = getsession(sid)
 	if not ses:

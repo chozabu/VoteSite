@@ -43,6 +43,22 @@ class PostPostLink(Base):
 		primaryjoin='PostPostLink.post_to_id==Post.id',
 		backref=backref("back_connectionItems")
     )
+class AuthorAuthorRepLink(Base):
+    __tablename__ = 'author_author_rep_link'
+    #id = Column(Integer, primary_key=True)
+    type = Column(String)
+    author_from_id = Column(ForeignKey('author.id'), primary_key=True)
+    author_to_id = Column(ForeignKey('author.id'), primary_key=True)
+    author_from = relationship(
+        'Author',
+		primaryjoin='AuthorAuthorRepLink.author_from_id==Author.id',
+		backref=backref("representers")
+    )
+    author_to = relationship(
+        'Author',
+		primaryjoin='AuthorAuthorRepLink.author_to_id==Author.id',
+		backref=backref("representees")
+    )
 class Comment(Base):
     __tablename__ = 'comment'
     id = Column(Integer, primary_key=True)
