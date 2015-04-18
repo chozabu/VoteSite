@@ -73,7 +73,26 @@ class Comment(Base):
     parent_id = Column(Integer, ForeignKey('comment.id'))
     children = relationship("Comment",
                 backref=backref('parent', remote_side=[id])
-            )
+                )
+class Catagory(Base):
+    __tablename__ = 'catagory'
+    id = Column(Integer, primary_key=True)
+    votenum = Column(Integer)
+    rating = Column(Float)
+
+    author_id = Column(Integer, ForeignKey('author.id'))
+    author = relationship(Author, backref=backref('catagorys', uselist=True))
+
+    created = Column(DateTime, default=func.now())
+    text = Column(String)
+
+    posts = relationship("Post", backref="catagory")
+    
+    
+    parent_id = Column(Integer, ForeignKey('catagory.id'))
+    children = relationship("Catagory",
+                backref=backref('parent', remote_side=[id])
+                )
 class Tag(Base):
     __tablename__ = 'tag'
     id = Column(Integer, primary_key=True)
@@ -90,6 +109,7 @@ class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
     votenum = Column(Integer)
+    catagory_id = Column(Integer, ForeignKey('catagory.id'))
     rating = Column(Float)
     created = Column(DateTime, default=func.now())
     name = Column(String)
