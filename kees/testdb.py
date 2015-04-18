@@ -82,3 +82,7 @@ comment2 = dblayer.createComment(sid, p1['id'], "Comment Two")
 print comment2
 comment3 = dblayer.createComment(sid, p1['id'], "Comment ONE-REPLY", comment1)
 print comment3
+
+print "\n vote comment"
+dblayer.voteComment(sid, comment1, .9)
+

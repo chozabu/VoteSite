@@ -96,3 +96,13 @@ class VotePost(Base):
     author = relationship(Author, backref=backref('votes', uselist=True))
     post_id = Column(Integer, ForeignKey('post.id'))
     post = relationship(Post, backref=backref('votes', uselist=True))
+class VoteComment(Base):
+    __tablename__ = 'commentvote'
+    id = Column(Integer, primary_key=True)
+    value = Column(Float)
+    created = Column(DateTime, default=func.now())
+    author_id = Column(Integer, ForeignKey('author.id'))
+    author = relationship(Author, backref=backref('commentvotes', uselist=True))
+    comment_id = Column(Integer, ForeignKey('comment.id'))
+    comment = relationship(Comment, backref=backref('votes', uselist=True))
+
