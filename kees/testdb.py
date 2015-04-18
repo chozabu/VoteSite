@@ -48,6 +48,13 @@ dblayer.joinProposal(loginfo['session'], p7['id'], p4['id'], "leadsto")
 print "\n vote prop"
 dblayer.voteProposal(loginfo['session'], p1['id'], .9)
 dblayer.voteProposal(loginfo['session'], p1['id'], .5)
+dblayer.voteProposal(loginfo['session'], p2['id'], .1)
+dblayer.voteProposal(loginfo['session'], p3['id'], .2)
+dblayer.voteProposal(loginfo['session'], p4['id'], .99)
+dblayer.voteProposal(loginfo['session'], p5['id'], .01)
+dblayer.voteProposal(loginfo['session'], p6['id'], .23)
+dblayer.voteProposal(loginfo['session'], p7['id'], .76)
+dblayer.voteProposal(loginfo['session'], p1d['id'], .23)
 
 
 print "\n list props"
