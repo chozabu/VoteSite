@@ -74,6 +74,14 @@ def jsonify_proposal(x):
 		return new
 
 
+def queryProposals(sortkey, start, count):
+	sqp = s.query(Post).order_by(getattr(Post, sortkey))[start:count]
+	#sqp = s.query(Post).filter().all()
+	result = []
+	for x in sqp:
+		result.append(jsonify_proposal(x))
+	return result
+
 def listProposals():
 	sqp = s.query(Post).all()
 	result = []

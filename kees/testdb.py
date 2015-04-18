@@ -66,4 +66,11 @@ cdata = dblayer.getAllConnections_id(p1['id'])
 for x in cdata:
 	print x
 	print cdata[x]
+
+print "\n query"
+
+sortedprops = dblayer.queryProposals("rating",0,8)
+for p in sortedprops:
+	print ""
+	print p['rating'], p['name']
 #print dblayer.getConnections(p2['id'])
