@@ -16,8 +16,12 @@ Higher ranked points will be to the left.
   
 This should quickly give an impression of a points popularity, and accuracy  
   
-To test: 
+To test:
 python runit.py
+
+Or to test with some sample data:
+cd kees; python testdb.py; cd .. ; python runit.py
+firefox http://localhost:8080/static/graphpoint.html?id=2
 
 API Refrence:
 
