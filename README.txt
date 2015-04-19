@@ -7,8 +7,9 @@ Creating Proposals
 Voting on proposals
 linking proposals (prop-a leadsto prop-b)
 Viewing a "map" of linked proposals
-Ad-Hoc Heirachy of topics
 Groups/Circles
+Ad-Hoc Heirachy of catagory
+Liquid Representation - to select a delegate to vote for you within a catagory
 
 For a "Proposal Map"
 An major part of the interface is a ZoomableUI displaying a point and all the ones it is connected to, and the ones they are connected  to, going onwards - perhaps to a recursion limit.
