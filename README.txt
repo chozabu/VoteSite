@@ -61,4 +61,4 @@ sudo pip install dataset
 
 
 Licence:
-This project is licenced under the GPL
+This project is licenced under the AGPL
