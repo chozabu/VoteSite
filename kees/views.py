@@ -22,6 +22,12 @@ def pythonicVarName(field):
 			id = id.replace(i, "")
 	return id
 
+def getPGVars(request):
+	if request.POST.__class__.__name__ == "NoVars":
+		print "nopost"
+		return request.GET
+	return request.POST
+
 def write_a_file(file_path, input_file):
 	temp_file_path = file_path + '~'
 	output_file = open(temp_file_path, 'wb')
@@ -69,14 +75,14 @@ def my_view(request):
 
 @view_config(route_name='new_user', renderer='json')
 def new_user(request):
-	i = request.POST
+	i = getPGVars(request)
 	username =  i['username']
 	print username
 	password =  i['password']
 	return dblayer.new_user(username,password)
 @view_config(route_name='login', renderer='json')
 def login(request):
-	i = request.POST
+	i = getPGVars(request)
 	username =  i['username']
 	password =  i['password']
 	return dblayer.login(username,password)
@@ -84,7 +90,7 @@ def login(request):
 @view_config(route_name='get_points', renderer='json')
 def get_points(request):
 	print "get_points"
-	#i = request.POST
+	#i = getPGVars(request)
 	#sortKey =  str(i['sortKey'])
 	#cursor =  int(i['cursor'])
 	#limit =  int(i['limit'])
@@ -94,9 +100,12 @@ def get_points(request):
 	return points
 @view_config(route_name='get_point', renderer='json')
 def get_point(request):
-	i = request.POST
-	#i = request.POST
+	print "rpoint"
+	i = getPGVars(request)
+	print i
+	print "rpoint2"
 	docid = str(i['docid'])
+	print "rpoint3"
 	print "point requested, docid=",docid
 	#cursor =  int(i['cursor'])
 	#limit =  int(i['limit'])
@@ -106,8 +115,8 @@ def get_point(request):
 	return points
 @view_config(route_name='get_connections', renderer='json')
 def get_connections(request):
-	i = request.POST
-	#i = request.POST
+	i = getPGVars(request)
+	#i = getPGVars(request)
 	docid = str(i['docid'])
 	print "connections requested, docid=",docid
 	points =dblayer.getConnections(docid)
@@ -115,8 +124,8 @@ def get_connections(request):
 	return points
 @view_config(route_name='get_all_connections', renderer='json')
 def get_all_connections(request):
-	i = request.POST
-	#i = request.POST
+	i = getPGVars(request)
+	#i = getPGVars(request)
 	docid = str(i['docid'])
 	print "all connections requested, docid=",docid
 	points =dblayer.getAllConnections_id(docid)
@@ -125,7 +134,7 @@ def get_all_connections(request):
 @view_config(route_name='join_points', renderer='json')
 def join_points(request):
 	print "join"
-	#i = request.POST
+	#i = getPGVars(request)
 	cType =  str(i['type'])
 	a =  int(i['a'])
 	b =  int(i['b'])
@@ -135,7 +144,7 @@ def join_points(request):
 
 @view_config(route_name='add_vote', renderer='json')
 def add_vote(request):
-	i = request.POST
+	i = getPGVars(request)
 	print i
 	session =  str(i['session'])
 	print "session=", session
@@ -147,7 +156,7 @@ def add_vote(request):
 
 @view_config(route_name='add_point', renderer='json')
 def add_point(request):
-	i = request.POST
+	i = getPGVars(request)
 	session =  i['session']
 	print session
 	text =  i['text']
